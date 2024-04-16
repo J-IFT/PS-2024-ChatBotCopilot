@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\copilot_chatbot.props" />
+</Project>
