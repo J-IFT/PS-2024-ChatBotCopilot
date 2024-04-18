@@ -3,6 +3,31 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Bienvenue sur TerraBloom !</h1>
 </div>
+
+<div id="chat-window">
+    <!-- Zone de chat -->
+</div>
+
+<input type="text" id="user-message" placeholder="Tapez votre message ici..." />
+<button onclick="sendMessage()">Envoyer</button>
+
+@section Scripts {
+    <script>
+        function sendMessage() {
+            var message = $("#user-message").val();
+
+            $.post("/Product/ChatWithBot", { message: message }, function (response) {
+                appendMessage("User", message);
+                appendMessage("Bot", response);
+            });
+
+            $("#user-message").val("");
+        }
+
+        function appendMessage(sender, message) {
+            $("#chat-window").append("<p><strong>" + sender + ":</strong> " + message + "</p>");
+        }
+    </script>
+}
