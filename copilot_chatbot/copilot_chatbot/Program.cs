@@ -2,14 +2,21 @@ using copilot_chatbot.Services;
 using copilot_chatbot.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configuration
+builder.Configuration.AddJsonFile("appsettings.json");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 // Ajoute le support des sessions
 builder.Services.AddSession();
+
+// Ajoute l'injection de IConfiguration
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 builder.Services.AddSingleton<OpenAIService>();
 builder.Services.AddSingleton<ExcelManager>();

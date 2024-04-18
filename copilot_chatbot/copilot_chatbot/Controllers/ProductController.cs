@@ -7,10 +7,10 @@ public class ProductController : Controller
     private readonly OpenAIService _openAIService;
     private readonly ExcelManager _excelManager;
 
-    public ProductController()
+    public ProductController(OpenAIService openAIService, ExcelManager excelManager)
     {
-        _openAIService = new OpenAIService();
-        _excelManager = new ExcelManager();
+        _openAIService = openAIService;
+        _excelManager = excelManager;
     }
 
     public IActionResult Index()

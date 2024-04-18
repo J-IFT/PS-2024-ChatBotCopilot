@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using RestSharp;
 using System.Collections.Generic;
 
@@ -6,13 +7,20 @@ namespace copilot_chatbot.Services
 {
     public class OpenAIService
     {
-        private const string apiKey = "538bebe57f1c4fd7a3167b21335ad5a3";
-        private const string modelEndpoint = "https://az-dev-fc-epsi-cog-002-xfq.openai.azure.com/completion";
+        private readonly IConfiguration _configuration;
+
+        public OpenAIService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         public ResponseModel GenerateContent(string prompt)
         {
+            var apiKey = _configuration["AppSettings:OpenAI:ApiKey"];
+            var modelEndpoint = _configuration["AppSettings:OpenAI:ModelEndpoint"];
+
             var client = new RestClient(modelEndpoint);
-            var request = new RestRequest("POST");  // Utilisation de la chaîne de caractères "POST" pour spécifier la méthode
+            var request = new RestRequest("POST");
 
             request.AddHeader("Authorization", $"Bearer {apiKey}");
             request.AddHeader("Content-Type", "application/json");
