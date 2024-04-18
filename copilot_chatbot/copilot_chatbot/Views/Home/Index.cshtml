@@ -10,24 +10,44 @@
     <!-- Zone de chat -->
 </div>
 
-<input type="text" id="user-message" placeholder="Tapez votre message ici..." />
-<button onclick="sendMessage()">Envoyer</button>
+<h2>Discutez avec notre bot ! :)</h2>
+
+<div>
+    <div id="chat-box" style="height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;"></div>
+    <input type="text" id="user-input" placeholder="Ecrire un message...">
+    <button onclick="sendMessage()">Envoyer</button>
+</div>
 
 @section Scripts {
     <script>
-        function sendMessage() {
-            var message = $("#user-message").val();
+        async function sendMessage() {
+            var userInput = document.getElementById("user-input").value;
+            document.getElementById("chat-box").innerHTML += `<p>User: ${userInput}</p>`;
 
-            $.post("/Product/ChatWithBot", { message: message }, function (response) {
-                appendMessage("User", message);
-                appendMessage("Bot", response);
-            });
+            try {
+                // Envoi du message à l'API pour obtenir la réponse de ChatGPT
+                var response = await fetch('/Product/ChatWithBot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: userInput })
+                });
 
-            $("#user-message").val("");
+                if (!response.ok) {
+                    var errorData = await response.json();
+                    throw new Error(errorData);
+                }
+
+                var responseData = await response.json();
+                var botResponse = responseData.message;
+                document.getElementById("chat-box").innerHTML += `<p>Bot: ${botResponse}</p>`;
+            } catch (error) {
+                console.error("Erreur lors de l'envoi du message :", error.message);
+                document.getElementById("chat-box").innerHTML += `<p>Bot: Erreur lors de l'envoi du message</p>`;
+            }
         }
 
-        function appendMessage(sender, message) {
-            $("#chat-window").append("<p><strong>" + sender + ":</strong> " + message + "</p>");
-        }
     </script>
 }
+

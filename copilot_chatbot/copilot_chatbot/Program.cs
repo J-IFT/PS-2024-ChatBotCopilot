@@ -6,17 +6,14 @@ using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuration
-builder.Configuration.AddJsonFile("appsettings.json");
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Add HttpClient
+builder.Services.AddHttpClient<OpenAIService>();
+
 // Ajoute le support des sessions
 builder.Services.AddSession();
-
-// Ajoute l'injection de IConfiguration
-builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 builder.Services.AddSingleton<OpenAIService>();
 builder.Services.AddSingleton<ExcelManager>();
@@ -30,15 +27,12 @@ app.UseSession();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
 
 app.MapControllerRoute(

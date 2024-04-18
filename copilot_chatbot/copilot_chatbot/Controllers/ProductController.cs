@@ -1,16 +1,21 @@
 ﻿using copilot_chatbot.Services;
 using copilot_chatbot.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 public class ProductController : Controller
 {
     private readonly OpenAIService _openAIService;
     private readonly ExcelManager _excelManager;
+    private readonly IConfiguration _configuration;
 
-    public ProductController(OpenAIService openAIService, ExcelManager excelManager)
+    public ProductController(OpenAIService openAIService, ExcelManager excelManager, IConfiguration configuration)
     {
-        _openAIService = openAIService;
-        _excelManager = excelManager;
+        _openAIService = openAIService ?? throw new ArgumentNullException(nameof(openAIService));
+        _excelManager = excelManager ?? throw new ArgumentNullException(nameof(excelManager));
+        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
     }
 
     public IActionResult Index()
@@ -19,65 +24,32 @@ public class ProductController : Controller
     }
 
     [HttpPost]
-    public IActionResult ChatWithBot(string message)
+    public async Task<IActionResult> ChatWithBot([FromBody] ChatRequest request)
     {
-        var userState = HttpContext.Session.GetString("UserState");
-
-        if (string.IsNullOrEmpty(userState))
+        try
         {
-            userState = "Initial";
-        }
+            var response = await _openAIService.GenerateContentAsync(request.Message);
+            var assistantMessage = response.choices?.FirstOrDefault()?.message?.content;
 
-        switch (userState)
+            if (assistantMessage != null)
+            {
+                return Ok(new { message = assistantMessage });
+            }
+            else
+            {
+                throw new InvalidOperationException("Response from OpenAI does not contain a message content");
+            }
+        }
+        catch (Exception ex)
         {
-            case "Initial":
-                if (message.ToLower().Contains("générer de nouvelles descriptions"))
-                {
-                    HttpContext.Session.SetString("UserState", "Import");
-                    return Content("Bot: Bien sûr, importez votre fichier Excel et dites moi quand c’est fait");
-                }
-                break;
-
-            case "Import":
-                if (message.ToLower().Contains("fichier"))
-                {
-                    var products = _excelManager.ReadExcel();
-                    if (products != null && products.Any())
-                    {
-                        HttpContext.Session.SetString("UserState", "Generate");
-                        return Content("Bot: J’ai lancé l’import, revenez dans quelques minutes quand ce sera terminé");
-                    }
-                    else
-                    {
-                        return Content("Bot: Aucun produit à traiter");
-                    }
-                }
-                break;
-
-            case "Generate":
-                if (message.ToLower().Contains("export"))
-                {
-                    var products = _excelManager.ReadExcel();
-                    foreach (var product in products)
-                    {
-                        var prompt = $"Générer un titre, une description et des mots clés pour le produit {product.Name} avec les caractéristiques {product.Features}.";
-                        var response = _openAIService.GenerateContent(prompt);
-                        product.Title = response.Title;
-                        product.Description = response.Description;
-                        product.Tags = response.Tags;
-                    }
-
-                    _excelManager.WriteExcel(products);
-
-                    HttpContext.Session.SetString("UserState", "Initial");
-                    return Content("Bot: Bien sûr, voici un export des données");
-                }
-                break;
-
-            default:
-                break;
+            // Log l'exception pour le débogage
+            Console.WriteLine($"Erreur lors de l'envoi du message : {ex.Message}");
+            return BadRequest("Erreur lors de l'envoi du message : " + ex.Message);
         }
+    }
 
-        return Content("Bot: Je ne comprends pas votre demande");
+    public class ChatRequest
+    {
+        public string Message { get; set; }
     }
 }
