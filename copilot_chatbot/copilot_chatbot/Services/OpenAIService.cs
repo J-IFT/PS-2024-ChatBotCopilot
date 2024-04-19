@@ -68,6 +68,10 @@ namespace copilot_chatbot.Services
                 throw new HttpRequestException($"Failed to get response from OpenAI: {response.ReasonPhrase}");
             }
         }
+        public bool ContainsKeyword(string message, string keyword)
+        {
+            return message.Contains(keyword, StringComparison.OrdinalIgnoreCase);
+        }
     }
     public class ResponseModel
     {
