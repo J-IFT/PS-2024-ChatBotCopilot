@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\yasmi\\Documents\\c#\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj": {}
+    "C:\\Users\\Colas Rabiller\\Source\\Repos\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj": {}
   },
   "projects": {
-    "C:\\Users\\yasmi\\Documents\\c#\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj": {
+    "C:\\Users\\Colas Rabiller\\Source\\Repos\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\yasmi\\Documents\\c#\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
+        "projectUniqueName": "C:\\Users\\Colas Rabiller\\Source\\Repos\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
         "projectName": "copilot_chatbot",
-        "projectPath": "C:\\Users\\yasmi\\Documents\\c#\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
-        "packagesPath": "C:\\Users\\yasmi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\yasmi\\Documents\\c#\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\obj\\",
+        "projectPath": "C:\\Users\\Colas Rabiller\\Source\\Repos\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
+        "packagesPath": "C:\\Users\\Colas Rabiller\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Colas Rabiller\\Source\\Repos\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\yasmi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Colas Rabiller\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -34,11 +34,28 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[6.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[6.0.11, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -58,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
         }
       }
     }
