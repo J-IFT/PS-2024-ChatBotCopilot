@@ -3,6 +3,14 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Copilot Chatbot</h1>
+
+    <div id="response"></div>
+    <div>
+        <input id="prompt-input" type="text" placeholder="Votre message"/>
+        <input id="prompt-input-file" type="file"/>
+        <input type="submit" onclick="sendMessage()" value="envoyer" />
+    </div>
+
+
 </div>

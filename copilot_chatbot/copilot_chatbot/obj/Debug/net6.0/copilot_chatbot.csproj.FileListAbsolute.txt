@@ -29,3 +29,5 @@ C:\Users\yasmi\Documents\c#\PS-2024-ChatBotCopilot\copilot_chatbot\copilot_chatb
 C:\Users\yasmi\Documents\c#\PS-2024-ChatBotCopilot\copilot_chatbot\copilot_chatbot\obj\Debug\net6.0\copilot_chatbot.pdb
 C:\Users\yasmi\Documents\c#\PS-2024-ChatBotCopilot\copilot_chatbot\copilot_chatbot\obj\Debug\net6.0\copilot_chatbot.genruntimeconfig.cache
 C:\Users\yasmi\Documents\c#\PS-2024-ChatBotCopilot\copilot_chatbot\copilot_chatbot\obj\Debug\net6.0\ref\copilot_chatbot.dll
+C:\Users\yasmi\Documents\c#\PS-2024-ChatBotCopilot\copilot_chatbot\copilot_chatbot\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\yasmi\Documents\c#\PS-2024-ChatBotCopilot\copilot_chatbot\copilot_chatbot\obj\Debug\net6.0\copilot_chatbot.csproj.CopyComplete
