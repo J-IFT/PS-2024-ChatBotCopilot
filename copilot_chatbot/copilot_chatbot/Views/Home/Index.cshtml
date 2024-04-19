@@ -16,6 +16,12 @@
     <div id="chat-box" style="height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;"></div>
     <input type="text" id="user-input" placeholder="Ecrire un message...">
     <button onclick="sendMessage()">Envoyer</button>
+
+    <!-- Bouton d'import -->
+    <div id="file-upload" style="display:none;">
+        <input type="file" id="file-input">
+        <button onclick="uploadFile()">Importer</button>
+    </div>
 </div>
 
 @section Scripts {
@@ -25,7 +31,6 @@
             document.getElementById("chat-box").innerHTML += `<p>User: ${userInput}</p>`;
 
             try {
-                // Envoi du message à l'API pour obtenir la réponse de ChatGPT
                 var response = await fetch('/Product/ChatWithBot', {
                     method: 'POST',
                     headers: {
@@ -42,12 +47,20 @@
                 var responseData = await response.json();
                 var botResponse = responseData.message;
                 document.getElementById("chat-box").innerHTML += `<p>Bot: ${botResponse}</p>`;
+
+                // Afficher le bouton d'import si le message est "import"
+                if (userInput.toLowerCase() === "import") {
+                    document.getElementById("file-upload").style.display = "block";
+                }
+
             } catch (error) {
                 console.error("Erreur lors de l'envoi du message :", error.message);
                 document.getElementById("chat-box").innerHTML += `<p>Bot: Erreur lors de l'envoi du message</p>`;
             }
         }
 
+        function uploadFile() {
+            // Le code pour envoyer le fichier sera ajouté ici plus tard
+        }
     </script>
 }
-

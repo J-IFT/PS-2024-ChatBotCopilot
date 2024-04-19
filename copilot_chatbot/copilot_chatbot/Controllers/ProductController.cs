@@ -29,15 +29,29 @@ public class ProductController : Controller
         try
         {
             var response = await _openAIService.GenerateContentAsync(request.Message);
-            var assistantMessage = response.choices?.FirstOrDefault()?.message?.content;
+            var userMessage = request.Message.ToLower();
 
-            if (assistantMessage != null)
+            if (_openAIService.ContainsKeyword(userMessage, "import"))
             {
-                return Ok(new { message = assistantMessage });
+                return Ok(new { message = "Bien sûr, importez votre fichier Excel et dites moi quand c’est fait" });
+            }
+            else if (_openAIService.ContainsKeyword(userMessage, "fichier"))
+            {
+                // Ajouter le code pour l'importation de l'Excel ici
+                return Ok(new { message = "J’ai lancé l’import, revenez dans quelques minutes quand ce sera terminé" });
             }
             else
             {
-                throw new InvalidOperationException("Response from OpenAI does not contain a message content");
+                var assistantMessage = response.choices?.FirstOrDefault()?.message?.content;
+
+                if (assistantMessage != null && !_openAIService.ContainsKeyword(userMessage, "import") && !_openAIService.ContainsKeyword(userMessage, "fichier"))
+                {
+                    return Ok(new { message = assistantMessage });
+                }
+                else if (assistantMessage == null)
+                {
+                    throw new InvalidOperationException("Response from OpenAI does not contain a message content");
+                }
             }
         }
         catch (Exception ex)
@@ -46,6 +60,7 @@ public class ProductController : Controller
             Console.WriteLine($"Erreur lors de l'envoi du message : {ex.Message}");
             return BadRequest("Erreur lors de l'envoi du message : " + ex.Message);
         }
+        return Ok();
     }
 
     public class ChatRequest
