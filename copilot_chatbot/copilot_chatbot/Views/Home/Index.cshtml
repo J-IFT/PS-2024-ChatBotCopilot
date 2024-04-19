@@ -3,6 +3,51 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Bienvenue sur TerraBloom !</h1>
 </div>
+
+<div id="chat-window">
+    <!-- Zone de chat -->
+</div>
+
+<h2>Discutez avec notre bot ! :)</h2>
+
+<div>
+    <div id="chat-box" style="height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;"></div>
+    <input type="text" id="user-input" placeholder="Ecrire un message...">
+    <button onclick="sendMessage()">Envoyer</button>
+</div>
+
+@section Scripts {
+    <script>
+        async function sendMessage() {
+            var userInput = document.getElementById("user-input").value;
+            document.getElementById("chat-box").innerHTML += `<p>User: ${userInput}</p>`;
+
+            try {
+                // Envoi du message à l'API pour obtenir la réponse de ChatGPT
+                var response = await fetch('/Product/ChatWithBot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: userInput })
+                });
+
+                if (!response.ok) {
+                    var errorData = await response.json();
+                    throw new Error(errorData);
+                }
+
+                var responseData = await response.json();
+                var botResponse = responseData.message;
+                document.getElementById("chat-box").innerHTML += `<p>Bot: ${botResponse}</p>`;
+            } catch (error) {
+                console.error("Erreur lors de l'envoi du message :", error.message);
+                document.getElementById("chat-box").innerHTML += `<p>Bot: Erreur lors de l'envoi du message</p>`;
+            }
+        }
+
+    </script>
+}
+
