@@ -48,8 +48,11 @@
                 var botResponse = responseData.message;
                 document.getElementById("chat-box").innerHTML += `<p>Bot: ${botResponse}</p>`;
 
-                // Afficher le bouton d'import si le message est "import"
-                if (userInput.toLowerCase() === "import") {
+                // Effacer le champ de texte après l'envoi du message
+                document.getElementById("user-input").value = '';
+                
+                // Afficher le bouton d'import si le message est "générer"
+                if (userInput.toLowerCase() === "générer") {
                     document.getElementById("file-upload").style.display = "block";
                 }
 
@@ -60,7 +63,37 @@
         }
 
         function uploadFile() {
-            // Le code pour envoyer le fichier sera ajouté ici plus tard
+            var fileInput = document.getElementById("file-input");
+            var file = fileInput.files[0];
+            console.log("Nom du fichier :", file.name);
+            var formData = new FormData();
+            formData.append("file", file);
+
+            fetch('/UploadFile', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de l\'importation du fichier');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                });
         }
+
+        // Envoyer le message lorsque la touche Entrée est pressée
+        document.getElementById("user-input").addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
     </script>
 }

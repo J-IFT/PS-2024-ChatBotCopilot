@@ -3,16 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{E99CC4BE-7E70-4742-B212-CFEDAB85F440}|copilot_chatbot\\copilot_chatbot.csproj|c:\\users\\julie\\onedrive - ifag paris\\documents\\architecture applicatives\\ps-2024-chatbotcopilot\\copilot_chatbot\\copilot_chatbot\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E99CC4BE-7E70-4742-B212-CFEDAB85F440}|copilot_chatbot\\copilot_chatbot.csproj|solutionrelative:copilot_chatbot\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{E99CC4BE-7E70-4742-B212-CFEDAB85F440}|copilot_chatbot\\copilot_chatbot.csproj|c:\\users\\julie\\onedrive - ifag paris\\documents\\architecture applicatives\\ps-2024-chatbotcopilot\\copilot_chatbot\\copilot_chatbot\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{E99CC4BE-7E70-4742-B212-CFEDAB85F440}|copilot_chatbot\\copilot_chatbot.csproj|solutionrelative:copilot_chatbot\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E99CC4BE-7E70-4742-B212-CFEDAB85F440}|copilot_chatbot\\copilot_chatbot.csproj|c:\\users\\julie\\onedrive - ifag paris\\documents\\architecture applicatives\\ps-2024-chatbotcopilot\\copilot_chatbot\\copilot_chatbot\\services\\openaiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E99CC4BE-7E70-4742-B212-CFEDAB85F440}|copilot_chatbot\\copilot_chatbot.csproj|solutionrelative:copilot_chatbot\\services\\openaiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E99CC4BE-7E70-4742-B212-CFEDAB85F440}|copilot_chatbot\\copilot_chatbot.csproj|c:\\users\\julie\\onedrive - ifag paris\\documents\\architecture applicatives\\ps-2024-chatbotcopilot\\copilot_chatbot\\copilot_chatbot\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E99CC4BE-7E70-4742-B212-CFEDAB85F440}|copilot_chatbot\\copilot_chatbot.csproj|solutionrelative:copilot_chatbot\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E99CC4BE-7E70-4742-B212-CFEDAB85F440}|copilot_chatbot\\copilot_chatbot.csproj|c:\\users\\julie\\onedrive - ifag paris\\documents\\architecture applicatives\\ps-2024-chatbotcopilot\\copilot_chatbot\\copilot_chatbot\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E99CC4BE-7E70-4742-B212-CFEDAB85F440}|copilot_chatbot\\copilot_chatbot.csproj|solutionrelative:copilot_chatbot\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E99CC4BE-7E70-4742-B212-CFEDAB85F440}|copilot_chatbot\\copilot_chatbot.csproj|c:\\users\\julie\\onedrive - ifag paris\\documents\\architecture applicatives\\ps-2024-chatbotcopilot\\copilot_chatbot\\copilot_chatbot\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E99CC4BE-7E70-4742-B212-CFEDAB85F440}|copilot_chatbot\\copilot_chatbot.csproj|solutionrelative:copilot_chatbot\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -30,41 +34,54 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\Views\\Home\\Index.cshtml",
-              "RelativeDocumentMoniker": "copilot_chatbot\\Views\\Home\\Index.cshtml",
-              "ToolTip": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\Views\\Home\\Index.cshtml",
-              "RelativeToolTip": "copilot_chatbot\\Views\\Home\\Index.cshtml",
-              "ViewState": "AQIAACAAAAAAAAAAAAAAACYAAABAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-04-19T08:00:56.732Z",
+              "DocumentIndex": 3,
+              "Title": "Product.cs",
+              "DocumentMoniker": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\Models\\Product.cs",
+              "RelativeDocumentMoniker": "copilot_chatbot\\Models\\Product.cs",
+              "ToolTip": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\Models\\Product.cs",
+              "RelativeToolTip": "copilot_chatbot\\Models\\Product.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-14T09:13:18.994Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "ProductController.cs",
               "DocumentMoniker": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\Controllers\\ProductController.cs",
               "RelativeDocumentMoniker": "copilot_chatbot\\Controllers\\ProductController.cs",
               "ToolTip": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\Controllers\\ProductController.cs",
               "RelativeToolTip": "copilot_chatbot\\Controllers\\ProductController.cs",
-              "ViewState": "AQIAACUAAAAAAAAAAAAqwEYAAAAAAAAA",
+              "ViewState": "AQIAAGAAAAAAAAAAAAAqwHAAAAAsAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-19T06:32:41.796Z",
+              "WhenOpened": "2024-05-14T07:04:00.525Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "OpenAIService.cs",
-              "DocumentMoniker": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\Services\\OpenAIService.cs",
-              "RelativeDocumentMoniker": "copilot_chatbot\\Services\\OpenAIService.cs",
-              "ToolTip": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\Services\\OpenAIService.cs",
-              "RelativeToolTip": "copilot_chatbot\\Services\\OpenAIService.cs",
-              "ViewState": "AQIAAHsAAAAAAAAAAAAkwJMAAAAAAAAA",
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "copilot_chatbot\\Views\\Home\\Index.cshtml",
+              "ToolTip": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "copilot_chatbot\\Views\\Home\\Index.cshtml",
+              "ViewState": "AQIAAEQAAAAAAAAAAAAAAEcAAAAUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-05-14T07:06:02.555Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\Program.cs",
+              "RelativeDocumentMoniker": "copilot_chatbot\\Program.cs",
+              "ToolTip": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\Program.cs",
+              "RelativeToolTip": "copilot_chatbot\\Program.cs",
+              "ViewState": "AQIAABgAAAAAAAAAAAAAABoAAAAlAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-19T06:32:54.534Z",
+              "WhenOpened": "2024-05-14T09:04:17.835Z",
               "EditorCaption": ""
             }
           ]
