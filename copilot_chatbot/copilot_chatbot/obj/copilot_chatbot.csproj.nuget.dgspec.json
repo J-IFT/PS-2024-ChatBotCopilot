@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Colas Rabiller\\Source\\Repos\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj": {}
+    "C:\\Users\\Colas Rabiller\\Desktop\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Colas Rabiller\\Source\\Repos\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj": {
+    "C:\\Users\\Colas Rabiller\\Desktop\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Colas Rabiller\\Source\\Repos\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
+        "projectUniqueName": "C:\\Users\\Colas Rabiller\\Desktop\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
         "projectName": "copilot_chatbot",
-        "projectPath": "C:\\Users\\Colas Rabiller\\Source\\Repos\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
+        "projectPath": "C:\\Users\\Colas Rabiller\\Desktop\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
         "packagesPath": "C:\\Users\\Colas Rabiller\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Colas Rabiller\\Source\\Repos\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\obj\\",
+        "outputPath": "C:\\Users\\Colas Rabiller\\Desktop\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Colas Rabiller\\AppData\\Roaming\\NuGet\\NuGet.Config",

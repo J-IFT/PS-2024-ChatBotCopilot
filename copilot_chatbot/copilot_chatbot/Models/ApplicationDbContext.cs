@@ -6,11 +6,22 @@ public class ApplicationDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Import> Imports { get; set; }
-    // Ajoutez les autres DbSet pour les autres modèles
-
+    public DbSet<Export> Exports { get; set; }
+    public DbSet<GeneratedDataProduct> GeneratedDataProducts { get; set; }
+    public DbSet<Keyword> Keywords { get; set; }
+    public DbSet<ProductKeyword> ProductKeywords { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "terrabloomDatabase.db");
+   
+        string databaseFolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database");
+
+        if (!Directory.Exists(databaseFolderPath))
+        {
+            Directory.CreateDirectory(databaseFolderPath);
+        }
+
+        string dbPath = Path.Combine(databaseFolderPath, "terrabloomDatabase.db");
+
         optionsBuilder.UseSqlite($"Data Source={dbPath}");
     }
 }
