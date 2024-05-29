@@ -11,12 +11,10 @@ namespace copilot_chatbot.Models
 
         public DateTime Imported_at { get; set; }
 
-        // Foreign key for User
         public int UserId { get; set; }
         public virtual User User { get; set; }
 
-        // Foreign key for Product, nullable to support new products
-        public int? ProductId { get; set; }
+        public int ProductId { get; set; }
         public virtual Product Product { get; set; }
     }
 }

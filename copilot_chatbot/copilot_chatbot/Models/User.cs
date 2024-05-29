@@ -18,5 +18,8 @@ namespace copilot_chatbot.Models
         [Required]
         [MaxLength(100)]
         public string Password { get; set; }
+
+        public virtual ICollection<Import> Imports { get; set; }
+        public virtual ICollection<Export> Exports { get; set; }
     }
 }

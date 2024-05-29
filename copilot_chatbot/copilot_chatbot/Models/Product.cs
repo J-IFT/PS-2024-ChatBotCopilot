@@ -8,15 +8,24 @@ namespace copilot_chatbot.Models
         public int Id { get; set; }
 
         [Required]
-        public string Characteristics { get; set; } // JSON format, including name, and other product characteristics
+        public string Name { get; set; } 
 
         [Required]
-        public string GeneratedData { get; set; } // JSON format, including title, description, and keywords
+        public string Species { get; set; }
 
+        public string? Type { get; set; }
 
+        public string? Size { get; set; }
+
+        public string? Blooming_season { get; set; }
+
+        public string? Color { get; set; }
+
+        public string Exposition{ get; set; }
+
+        [Required]
         public DateTime Last_updated { get; set; }
 
-        // Navigation property for Imports (optional)
         public virtual ICollection<Import> Imports { get; set; }
     }
 }

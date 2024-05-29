@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/tqRhQ7j51784FmWDk/juq9rFaPNKSIBL9R7IHgZE56ssMdpibB4fUlfGJpNl/KzriAgLozFS5tkRzri03jKcg==",
+  "dgSpecHash": "N0+4FB7FaqRL2Glpz0wBvzxu+wWn3WvCootLng1F92/nRUzSAcHcEDumhIT5urW1ymA+LAxD1yne+OH/38eTzA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Colas Rabiller\\Source\\Repos\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
+  "projectFilePath": "C:\\Users\\Colas Rabiller\\Desktop\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Colas Rabiller\\.nuget\\packages\\adaptivecards\\1.2.3\\adaptivecards.1.2.3.nupkg.sha512",
     "C:\\Users\\Colas Rabiller\\.nuget\\packages\\epplus\\7.1.1\\epplus.7.1.1.nupkg.sha512",
