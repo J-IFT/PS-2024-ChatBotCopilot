@@ -1,8 +1,10 @@
 using copilot_chatbot.Services;
 using copilot_chatbot.Utilities;
+using copilot_chatbot.Models;  // Ajoutez cette ligne
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;  // Ajoutez cette ligne
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,10 @@ builder.Services.AddSession();
 
 builder.Services.AddSingleton<OpenAIService>();
 builder.Services.AddSingleton<ExcelManager>();
+
+// Configurez ApplicationDbContext avec SQLite
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite("Data Source=Database/terrabloomDatabase.db"));
 
 var app = builder.Build();
 

@@ -8,15 +8,18 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using ClosedXML.Excel;
 using Newtonsoft.Json;
+using copilot_chatbot.Models;
 
 public class ProductController : Controller
 {
+    private readonly ApplicationDbContext _context;
     private readonly OpenAIService _openAIService;
     private readonly ExcelManager _excelManager;
     private readonly IConfiguration _configuration;
 
-    public ProductController(OpenAIService openAIService, ExcelManager excelManager, IConfiguration configuration)
+    public ProductController(ApplicationDbContext context, OpenAIService openAIService, ExcelManager excelManager, IConfiguration configuration)
     {
+        _context = context;
         _openAIService = openAIService ?? throw new ArgumentNullException(nameof(openAIService));
         _excelManager = excelManager ?? throw new ArgumentNullException(nameof(excelManager));
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -78,25 +81,17 @@ public class ProductController : Controller
                 return BadRequest("Aucun fichier sélectionné.");
             }
 
-            // Vérifier si le fichier est un fichier Excel
             if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
             {
                 return BadRequest("Veuillez sélectionner un fichier Excel (.xlsx).");
             }
 
-            // Lire le contenu du fichier Excel avec ClosedXML
             using (var workbook = new XLWorkbook(file.OpenReadStream()))
             {
-                // Sélectionner la première feuille de calcul
                 var worksheet = workbook.Worksheet(1);
-
-                // Lire les données à partir de la feuille de calcul
-                var rows = worksheet.RowsUsed().ToList();
-
-                // Créer une structure de données pour stocker les données du fichier Excel
+                var rows = worksheet.RowsUsed().Skip(1).ToList(); // Skip header row
                 var data = new List<Dictionary<string, object>>();
 
-                // Parcourir chaque ligne et récupérer les valeurs des cellules
                 foreach (var row in rows)
                 {
                     var rowData = new Dictionary<string, object>();
@@ -107,13 +102,37 @@ public class ProductController : Controller
                     data.Add(rowData);
                 }
 
-                // Convertir les données en JSON
                 var jsonData = JsonConvert.SerializeObject(data);
-
                 Console.WriteLine(jsonData);
-                // Vous pouvez maintenant utiliser le JSON pour les étapes suivantes
 
-                // Exemple de message de succès
+                // Insert the imported data into the database
+                foreach (var row in data)
+                {
+                    var product = new copilot_chatbot.Models.Product // Utilisez le namespace complet ici
+                    {
+                        Name = row["A"].ToString(),
+                        Species = row["B"].ToString(),
+                        Type = row.ContainsKey("C") ? row["C"].ToString() : null,
+                        Size = row.ContainsKey("D") ? row["D"].ToString() : null,
+                        Blooming_season = row.ContainsKey("E") ? row["E"].ToString() : null,
+                        Color = row.ContainsKey("F") ? row["F"].ToString() : null,
+                        Exposition = row.ContainsKey("G") ? row["G"].ToString() : null,
+                        Last_updated = DateTime.Now
+                    };
+                    _context.Products.Add(product);
+                }
+
+                // Insert import record
+                var importRecord = new Import
+                {
+                    IsProcessed = false,
+                    Imported_at = DateTime.Now,
+                    UserId = 1 // Assuming a default user id for this example
+                };
+                _context.Imports.Add(importRecord);
+
+                await _context.SaveChangesAsync();
+
                 return Ok("Fichier Excel importé avec succès.");
             }
         }

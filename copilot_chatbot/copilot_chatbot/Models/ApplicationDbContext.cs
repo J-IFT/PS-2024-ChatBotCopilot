@@ -1,4 +1,6 @@
-﻿using copilot_chatbot.Models;
+﻿using System;
+using System.IO; // Ajout du namespace pour utiliser la classe Path
+using copilot_chatbot.Models;
 using Microsoft.EntityFrameworkCore;
 
 public class ApplicationDbContext : DbContext
@@ -10,6 +12,12 @@ public class ApplicationDbContext : DbContext
     public DbSet<GeneratedDataProduct> GeneratedDataProducts { get; set; }
     public DbSet<Keyword> Keywords { get; set; }
     public DbSet<ProductKeyword> ProductKeywords { get; set; }
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options)
+    {
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
    
