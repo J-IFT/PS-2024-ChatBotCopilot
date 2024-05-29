@@ -13,6 +13,11 @@
     <PackageReference Include="Microsoft.Bot.Builder.Dialogs" Version="4.22.3" />
     <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Version="4.22.3" />
     <PackageReference Include="Microsoft.Bot.Connector" Version="4.22.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="OpenAI" Version="1.11.0" />
     <PackageReference Include="RestSharp" Version="110.2.0" />
   </ItemGroup>
