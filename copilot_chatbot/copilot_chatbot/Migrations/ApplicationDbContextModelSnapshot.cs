@@ -54,7 +54,8 @@ namespace copilot_chatbot.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int?>("ExportId")
+                        .IsRequired()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
@@ -63,7 +64,7 @@ namespace copilot_chatbot.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ExportId");
 
                     b.ToTable("GeneratedDataProducts");
                 });
@@ -117,9 +118,11 @@ namespace copilot_chatbot.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Blooming_season")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Color")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Exposition")
@@ -134,6 +137,7 @@ namespace copilot_chatbot.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Size")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Species")
@@ -141,6 +145,7 @@ namespace copilot_chatbot.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Type")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -178,37 +183,19 @@ namespace copilot_chatbot.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("ExportGeneratedDataProduct", b =>
-                {
-                    b.Property<int>("ExportsId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("GeneratedDataProductsId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ExportsId", "GeneratedDataProductsId");
-
-                    b.HasIndex("GeneratedDataProductsId");
-
-                    b.ToTable("ExportGeneratedDataProduct");
                 });
 
             modelBuilder.Entity("copilot_chatbot.Models.Export", b =>
@@ -224,13 +211,13 @@ namespace copilot_chatbot.Migrations
 
             modelBuilder.Entity("copilot_chatbot.Models.GeneratedDataProduct", b =>
                 {
-                    b.HasOne("copilot_chatbot.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
+                    b.HasOne("copilot_chatbot.Models.Export", "Export")
+                        .WithMany("GeneratedDataProducts")
+                        .HasForeignKey("ExportId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product");
+                    b.Navigation("Export");
                 });
 
             modelBuilder.Entity("copilot_chatbot.Models.Import", b =>
@@ -255,7 +242,7 @@ namespace copilot_chatbot.Migrations
             modelBuilder.Entity("copilot_chatbot.Models.ProductKeyword", b =>
                 {
                     b.HasOne("copilot_chatbot.Models.GeneratedDataProduct", "GeneratedDataProduct")
-                        .WithMany("ProductKeyword")
+                        .WithMany("ProductKeywords")
                         .HasForeignKey("GeneratedDataProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -271,24 +258,14 @@ namespace copilot_chatbot.Migrations
                     b.Navigation("Keyword");
                 });
 
-            modelBuilder.Entity("ExportGeneratedDataProduct", b =>
+            modelBuilder.Entity("copilot_chatbot.Models.Export", b =>
                 {
-                    b.HasOne("copilot_chatbot.Models.Export", null)
-                        .WithMany()
-                        .HasForeignKey("ExportsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("copilot_chatbot.Models.GeneratedDataProduct", null)
-                        .WithMany()
-                        .HasForeignKey("GeneratedDataProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("GeneratedDataProducts");
                 });
 
             modelBuilder.Entity("copilot_chatbot.Models.GeneratedDataProduct", b =>
                 {
-                    b.Navigation("ProductKeyword");
+                    b.Navigation("ProductKeywords");
                 });
 
             modelBuilder.Entity("copilot_chatbot.Models.Keyword", b =>

@@ -4,22 +4,16 @@ namespace copilot_chatbot.Models
 {
     public class GeneratedDataProduct
     {
-        [Key]
         public int Id { get; set; }
-
-        [Required]
         public string Title { get; set; }
-
-        [Required]
         public string Description { get; set; }
-
-        [Required]
         public DateTime Created_at { get; set; }
 
-        public int ProductId { get; set; }
-        public virtual Product Product { get; set; }
+        // Propriété pour la relation avec Export
+        public int? ExportId { get; set; }
+        public virtual Export Export { get; set; }
 
-        public virtual ICollection<ProductKeyword> ProductKeyword { get; set; }
-        public virtual ICollection<Export> Exports { get; set; }
+        // Propriété pour la relation avec ProductKeyword
+        public virtual ICollection<ProductKeyword> ProductKeywords { get; set; }
     }
 }

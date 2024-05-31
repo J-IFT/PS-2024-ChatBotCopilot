@@ -1,10 +1,10 @@
 using copilot_chatbot.Services;
 using copilot_chatbot.Utilities;
-using copilot_chatbot.Models;  // Ajoutez cette ligne
+using copilot_chatbot.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;  // Ajoutez cette ligne
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 

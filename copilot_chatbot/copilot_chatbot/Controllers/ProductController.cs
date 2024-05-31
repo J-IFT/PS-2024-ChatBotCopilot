@@ -108,7 +108,7 @@ public class ProductController : Controller
                 // Insert the imported data into the database
                 foreach (var row in data)
                 {
-                    var product = new copilot_chatbot.Models.Product // Utilisez le namespace complet ici
+                    var product = new copilot_chatbot.Models.Product
                     {
                         Name = row["A"].ToString(),
                         Species = row["B"].ToString(),
@@ -120,17 +120,18 @@ public class ProductController : Controller
                         Last_updated = DateTime.Now
                     };
                     _context.Products.Add(product);
+
+                    var importRecord = new Import
+                    {
+                        IsProcessed = false,
+                        Imported_at = DateTime.Now,
+                        UserId = 1, // en dur, à passer en dynamique
+                        Product = product
+                    };
+                    _context.Imports.Add(importRecord);
                 }
 
-                // Insert import record
-                var importRecord = new Import
-                {
-                    IsProcessed = false,
-                    Imported_at = DateTime.Now,
-                    UserId = 1 // Assuming a default user id for this example
-                };
-                _context.Imports.Add(importRecord);
-
+                // Save changes after adding all products and import records
                 await _context.SaveChangesAsync();
 
                 return Ok("Fichier Excel importé avec succès.");
