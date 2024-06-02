@@ -6,48 +6,29 @@
     <h1 class="display-4">Bienvenue sur TerraBloom !</h1>
 </div>
 
-<div id="chat-window">
-    <!-- Zone de chat -->
-</div>
+<h2>Veuillez vous connecter :</h2>
 
-<h2>Discutez avec notre bot ! :)</h2>
+<form method="post" action="/Home/Connexion">
+    <div>
+        <label for="username">Nom d'utilisateur :</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+        <label for="email">Adresse e-mail :</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+    <div>
+        <label for="password">Mot de passe :</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+        <button type="submit">Se connecter</button>
+    </div>
+</form>
 
-<div>
-    <div id="chat-box" style="height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;"></div>
-    <input type="text" id="user-input" placeholder="Ecrire un message...">
-    <button onclick="sendMessage()">Envoyer</button>
-</div>
-
-@section Scripts {
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
     <script>
-        async function sendMessage() {
-            var userInput = document.getElementById("user-input").value;
-            document.getElementById("chat-box").innerHTML += `<p>User: ${userInput}</p>`;
-
-            try {
-                // Envoi du message à l'API pour obtenir la réponse de ChatGPT
-                var response = await fetch('/Product/ChatWithBot', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ message: userInput })
-                });
-
-                if (!response.ok) {
-                    var errorData = await response.json();
-                    throw new Error(errorData);
-                }
-
-                var responseData = await response.json();
-                var botResponse = responseData.message;
-                document.getElementById("chat-box").innerHTML += `<p>Bot: ${botResponse}</p>`;
-            } catch (error) {
-                console.error("Erreur lors de l'envoi du message :", error.message);
-                document.getElementById("chat-box").innerHTML += `<p>Bot: Erreur lors de l'envoi du message</p>`;
-            }
-        }
-
+        alert("@ViewBag.ErrorMessage");
     </script>
 }
-
