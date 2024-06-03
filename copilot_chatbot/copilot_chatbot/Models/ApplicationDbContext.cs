@@ -93,7 +93,5 @@ public class ApplicationDbContext : DbContext
             .WithOne(i => i.User)
             .HasForeignKey(i => i.UserId)
             .OnDelete(DeleteBehavior.Cascade);
-
     }
-
 }

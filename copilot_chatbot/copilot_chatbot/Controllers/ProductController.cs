@@ -85,7 +85,7 @@ public class ProductController : Controller
             {
                 return BadRequest("Veuillez sélectionner un fichier Excel (.xlsx).");
             }
-
+            Import importRecord = null;
             using (var workbook = new XLWorkbook(file.OpenReadStream()))
             {
                 var worksheet = workbook.Worksheet(1);
@@ -110,18 +110,18 @@ public class ProductController : Controller
                 {
                     var product = new copilot_chatbot.Models.Product
                     {
-                        Name = row["A"].ToString(),
-                        Species = row["B"].ToString(),
-                        Type = row.ContainsKey("C") ? row["C"].ToString() : null,
+                        Blooming_season = row.ContainsKey("A") ? row["A"].ToString() : null,
+                        Color = row.ContainsKey("B") ? row["B"].ToString() : null,
+                        Exposition = row.ContainsKey("C") ? row["C"].ToString() : null,
+                        Last_updated = DateTime.Now,
                         Size = row.ContainsKey("D") ? row["D"].ToString() : null,
-                        Blooming_season = row.ContainsKey("E") ? row["E"].ToString() : null,
-                        Color = row.ContainsKey("F") ? row["F"].ToString() : null,
-                        Exposition = row.ContainsKey("G") ? row["G"].ToString() : null,
-                        Last_updated = DateTime.Now
+                        Name = row["E"].ToString(),
+                        Species = row["F"].ToString(),
+                        Type = row.ContainsKey("G") ? row["G"].ToString() : null
                     };
                     _context.Products.Add(product);
 
-                    var importRecord = new Import
+                    importRecord = new Import
                     {
                         IsProcessed = false,
                         Imported_at = DateTime.Now,
@@ -129,8 +129,9 @@ public class ProductController : Controller
                         Product = product
                     };
                     _context.Imports.Add(importRecord);
+                    // Appel de la fonction de génération des données pour ce produit
+                    await GenerateData(product, importRecord);
                 }
-
                 // Save changes after adding all products and import records
                 await _context.SaveChangesAsync();
 
@@ -142,7 +143,65 @@ public class ProductController : Controller
             return StatusCode(StatusCodes.Status500InternalServerError, $"Une erreur s'est produite lors de l'import du fichier : {ex.Message}");
         }
     }
+    private async Task<GeneratedDataProduct> GenerateData(copilot_chatbot.Models.Product product, Import importRecord)
+    {
+        // Générer le titre
+        var titleResponse = await _openAIService.GenerateContentAsync($"Générer un titre pour le produit {product.Name}. Caractéristiques : Blooming_season: {product.Blooming_season}, Color: {product.Color}, Exposition: {product.Exposition}, Size: {product.Size}, Species: {product.Species}, Type: {product.Type}");
+        var title = titleResponse.choices?.FirstOrDefault()?.message?.content ?? $"Titre généré pour {product.Name}";
 
+        // Générer la description
+        var descriptionResponse = await _openAIService.GenerateContentAsync($"Générer une description pour le produit {product.Name}. Caractéristiques : Blooming_season: {product.Blooming_season}, Color: {product.Color}, Exposition: {product.Exposition}, Size: {product.Size}, Species: {product.Species}, Type: {product.Type}");
+        var description = descriptionResponse.choices?.FirstOrDefault()?.message?.content ?? "Description générée";
+
+        // Générer les mots-clés
+        var keywordsResponse = await _openAIService.GenerateContentAsync($"Générer 5 mots-clés pour le produit {product.Name}. Caractéristiques : Blooming_season: {product.Blooming_season}, Color: {product.Color}, Exposition: {product.Exposition}, Size: {product.Size}, Species: {product.Species}, Type: {product.Type}");
+        var keywordsContent = keywordsResponse.choices?.FirstOrDefault()?.message?.content;
+        var keywords = ExtractKeywords(keywordsContent);
+
+        // Créez un objet GeneratedDataProduct avec les données générées
+        var generatedData = new GeneratedDataProduct
+        {
+            Title = title,
+            Description = description,
+            Created_at = DateTime.Now,
+            ProductKeywords = keywords,
+            //ProductId = product.Id
+            //ExportId =
+        };
+
+        _context.GeneratedDataProducts.Add(generatedData);
+        await _context.SaveChangesAsync();
+
+        // Mise à jour de IsProcessed à true après sauvegarde des données générées
+        importRecord.IsProcessed = true;
+        _context.Imports.Update(importRecord);
+        await _context.SaveChangesAsync();
+
+        return generatedData;
+
+    }
+    private List<ProductKeyword> ExtractKeywords(string keywordsContent)
+    {
+        // Supposons que les mots-clés sont séparés par des virgules dans la réponse
+        var keywords = keywordsContent.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                      .Select(k => k.Trim())
+                                      .Distinct()
+                                      .ToList();
+
+        var productKeywords = new List<ProductKeyword>();
+        foreach (var keyword in keywords)
+        {
+            var existingKeyword = _context.Keywords.FirstOrDefault(k => k.Name == keyword);
+            if (existingKeyword == null)
+            {
+                existingKeyword = new Keyword { Name = keyword };
+                _context.Keywords.Add(existingKeyword);
+            }
+            productKeywords.Add(new ProductKeyword { Keyword = existingKeyword });
+        }
+
+        return productKeywords;
+    }
     public class ChatRequest
     {
         public string Message { get; set; }
