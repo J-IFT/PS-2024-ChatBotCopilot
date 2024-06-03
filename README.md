@@ -33,7 +33,10 @@ https://github.com/J-IFT/PS-2024-ChatBotCopilot/tree/main
 Ouvrez le fichier solution (.sln) dans Visual Studio.
 Assurez-vous que les packages NuGet sont restaurés.
 
-Appuyez sur run pour exécuter l'application.
+Appuyez sur run pour exécuter l'application
+OU
+dotnet build
+dotnet run
 
 
 ### 💻 Applications et langages utilisés :
