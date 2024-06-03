@@ -249,25 +249,27 @@ public class ProductController : Controller
                 var currentRow = 1;
 
                 // Ajouter des en-têtes de colonne
-                worksheet.Cell(currentRow, 1).Value = "Name";
-                worksheet.Cell(currentRow, 2).Value = "Blooming_season";
-                worksheet.Cell(currentRow, 3).Value = "Color";
-                worksheet.Cell(currentRow, 4).Value = "Exposition";
-                worksheet.Cell(currentRow, 5).Value = "Size";
-                worksheet.Cell(currentRow, 6).Value = "Species";
-                worksheet.Cell(currentRow, 7).Value = "Type";
+                worksheet.Cell(currentRow, 1).Value = "Blooming_season";
+                worksheet.Cell(currentRow, 2).Value = "Color";
+                worksheet.Cell(currentRow, 3).Value = "Exposition";
+                worksheet.Cell(currentRow, 4).Value = "Last_updated";
+                worksheet.Cell(currentRow, 5).Value = "Name";
+                worksheet.Cell(currentRow, 6).Value = "Size";
+                worksheet.Cell(currentRow, 7).Value = "Species";
+                worksheet.Cell(currentRow, 8).Value = "Type";
                 Console.WriteLine("En têtes done");
                 // Ajouter les données des références
                 foreach (var reference in references)
                 {
                     currentRow++;
-                    worksheet.Cell(currentRow, 1).Value = reference.Name;
-                    worksheet.Cell(currentRow, 2).Value = reference.Blooming_season;
-                    worksheet.Cell(currentRow, 3).Value = reference.Color;
-                    worksheet.Cell(currentRow, 4).Value = reference.Exposition;
-                    worksheet.Cell(currentRow, 5).Value = reference.Size;
-                    worksheet.Cell(currentRow, 6).Value = reference.Species;
-                    worksheet.Cell(currentRow, 7).Value = reference.Type;
+                    worksheet.Cell(currentRow, 1).Value = reference.Blooming_season;
+                    worksheet.Cell(currentRow, 2).Value = reference.Color;
+                    worksheet.Cell(currentRow, 3).Value = reference.Exposition;
+                    worksheet.Cell(currentRow, 4).Value = reference.Last_updated;
+                    worksheet.Cell(currentRow, 5).Value = reference.Name;
+                    worksheet.Cell(currentRow, 6).Value = reference.Size;
+                    worksheet.Cell(currentRow, 7).Value = reference.Species;
+                    worksheet.Cell(currentRow, 8).Value = reference.Type;
                 }
                 Console.WriteLine("Refs done");
                 // Sauvegarder le fichier Excel dans un MemoryStream
