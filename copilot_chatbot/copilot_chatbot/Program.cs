@@ -20,9 +20,10 @@ builder.Services.AddSession();
 builder.Services.AddSingleton<OpenAIService>();
 builder.Services.AddSingleton<ExcelManager>();
 
-// Configurez ApplicationDbContext avec SQLite
+// Configuration ApplicationDbContext avec SQLite
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite("Data Source=Database/terrabloomDatabase.db"));
+    options.UseSqlite("Data Source=Database/terrabloomDatabase.db"),
+    ServiceLifetime.Singleton);
 
 var app = builder.Build();
 
@@ -35,6 +36,9 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+
+var dbcontext = app.Services.GetRequiredService<ApplicationDbContext>();
+dbcontext.Database.EnsureCreated();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
