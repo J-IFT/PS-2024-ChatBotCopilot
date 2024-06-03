@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("copilot_chatbot")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3d51db62f09e3d4ae5b0f105a24481537f5ddd18")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+22edc32c69eccd07538199fcaaadd8ee7ceeb3bd")]
 [assembly: System.Reflection.AssemblyProductAttribute("copilot_chatbot")]
 [assembly: System.Reflection.AssemblyTitleAttribute("copilot_chatbot")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

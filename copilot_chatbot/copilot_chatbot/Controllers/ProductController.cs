@@ -9,6 +9,7 @@ using System.IO;
 using ClosedXML.Excel;
 using Newtonsoft.Json;
 using copilot_chatbot.Models;
+using Microsoft.EntityFrameworkCore;
 
 public class ProductController : Controller
 {
@@ -52,6 +53,35 @@ public class ProductController : Controller
             else if (_openAIService.ContainsKeyword(userMessage, "export"))
             {
                 return Ok(new { message = "Bien sûr, voici un export des données" });
+            }
+            //Question 4 pptx : Combien y a-t-il de références produit dans la base ?
+            if (_openAIService.ContainsKeyword(userMessage, "références"))
+            {
+                var numberOfReferences = await _context.Products.CountAsync();
+                return Ok(new { message = $"Il y a actuellement {numberOfReferences} références produits dans la base" });
+            }
+            //Question 5 pptx : Combien d’imports ai-je déjà fait ?
+            else if (_openAIService.ContainsKeyword(userMessage, "imports"))
+            {
+                var userId = 1; // Remplacez ceci par l'ID de l'utilisateur actuel
+                var numberOfImports = await _context.Imports.Where(i => i.UserId == userId).CountAsync();
+                var numberOfReferences = await _context.Products.CountAsync();
+                //var totalReferences = await _context.Imports.Where(i => i.UserId == userId).SumAsync(i => i.Product.Count);
+                return Ok(new { message = $"Vous avez déjà lancé {numberOfImports} imports pour un total de {numberOfReferences} références produits." });
+            }
+            //Question 6 pptx : Est-ce que mon dernier import est terminé ?
+            else if (_openAIService.ContainsKeyword(userMessage, "terminé"))
+            {
+                var userId = 1; // Remplacez ceci par l'ID de l'utilisateur actuel
+                var lastImport = await _context.Imports.Where(i => i.UserId == userId).OrderByDescending(i => i.Imported_at).FirstOrDefaultAsync();
+                if (lastImport != null && !lastImport.IsProcessed)
+                {
+                    return Ok(new { message = "Non, la génération est toujours en cours, veuillez revenir dans quelques minutes." });
+                }
+                else
+                {
+                    return Ok(new { message = "Oui, la génération est terminée." });
+                }
             }
             else
             {
