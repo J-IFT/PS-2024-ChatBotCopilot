@@ -42,5 +42,28 @@ namespace copilot_chatbot.Controllers
                 return BadRequest("Error");
             }
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> SendFile([FromBody] PromptRequest request, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file received");
+            }
+
+            if (Path.GetExtension(file.FileName) != ".xlsx")
+            {
+                return BadRequest(new { message = "Veuillez envoyer un fichier au format .xlsx" });
+            }
+
+            using (var streamReader = new StreamReader(file.OpenReadStream()))
+            {
+                var fileContent = await streamReader.ReadToEndAsync();
+                Console.WriteLine(fileContent);
+            }
+
+            return Ok();
+        }
     }
 }
