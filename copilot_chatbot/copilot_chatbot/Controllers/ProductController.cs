@@ -231,6 +231,62 @@ public class ProductController : Controller
         await _openAIService.GenerateContentAsync(message);
         Console.WriteLine("Notification d'importation terminée envoyée");
     }
+
+    [HttpPost("ExportReferences")]
+    public async Task<IActionResult> ExportReferences()
+    {
+        try
+        {
+            Console.WriteLine("ExportReferences method called.");
+            // Étape 2 : Récupérer toutes les références produits depuis la base de données
+            var references = _context.Products.ToList(); // À adapter selon votre modèle de données
+            Console.WriteLine($"Total products: {references.Count}"); // Ajout d'un message de débogage
+            // Étape 3 : Parser les données JSON en Excel
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("References");
+                var currentRow = 1;
+
+                // Ajouter des en-têtes de colonne
+                worksheet.Cell(currentRow, 1).Value = "Name";
+                worksheet.Cell(currentRow, 2).Value = "Blooming_season";
+                worksheet.Cell(currentRow, 3).Value = "Color";
+                worksheet.Cell(currentRow, 4).Value = "Exposition";
+                worksheet.Cell(currentRow, 5).Value = "Size";
+                worksheet.Cell(currentRow, 6).Value = "Species";
+                worksheet.Cell(currentRow, 7).Value = "Type";
+                Console.WriteLine("En têtes done");
+                // Ajouter les données des références
+                foreach (var reference in references)
+                {
+                    currentRow++;
+                    worksheet.Cell(currentRow, 1).Value = reference.Name;
+                    worksheet.Cell(currentRow, 2).Value = reference.Blooming_season;
+                    worksheet.Cell(currentRow, 3).Value = reference.Color;
+                    worksheet.Cell(currentRow, 4).Value = reference.Exposition;
+                    worksheet.Cell(currentRow, 5).Value = reference.Size;
+                    worksheet.Cell(currentRow, 6).Value = reference.Species;
+                    worksheet.Cell(currentRow, 7).Value = reference.Type;
+                }
+                Console.WriteLine("Refs done");
+                // Sauvegarder le fichier Excel dans un MemoryStream
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+
+                    // Retournez le fichier Excel au client
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "references.xlsx");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Une erreur s'est produite lors de l'export des références : {ex.Message}");
+        }
+    }
+
+
     public class ChatRequest
     {
         public string Message { get; set; }

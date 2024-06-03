@@ -6,21 +6,26 @@
     <h1 class="display-4">Bienvenue sur TerraBloom !</h1>
 </div>
 
-    <div id="chat-window">
-        <!-- Zone de chat -->
-    </div>
+<div id="chat-window">
+    <!-- Zone de chat -->
+</div>
 
-    <h2>Discutez avec notre bot ! :)</h2>
-        <div id="chat-box"></div>
-        <input type="text" id="user-input" placeholder="Ecrire un message...">
-        <button class="btn-primary" onclick="sendMessage()">Envoyer</button>
+<h2>Discutez avec notre bot ! :)</h2>
+<div id="chat-box"></div>
+<input type="text" id="user-input" placeholder="Ecrire un message...">
+<button class="btn-primary" onclick="sendMessage()">Envoyer</button>
 
-        <!-- Bouton d'import -->
-        <div id="file-upload" style="display:none;">
-            <input type="file" id="file-input">
-            <button onclick="uploadFile()">Importer</button>
-            <span id="file-name"></span>
-        </div>
+<!-- Bouton d'import -->
+<div id="file-upload" style="display:none;">
+    <input type="file" id="file-input">
+    <button onclick="uploadFile()">Importer</button>
+    <span id="file-name"></span>
+</div>
+
+<!-- Bouton d'export -->
+<div id="export-button" style="display:none;">
+    <button class="btn-primary" onclick="exportReferences()">Exporter</button>
+</div>
 
 @section Scripts {
     <script>
@@ -54,6 +59,11 @@
                     document.getElementById("file-upload").style.display = "block";
                 }
 
+                if (/\b(export)\b/i.test(userInput)) {
+                    document.getElementById("export-button").style.display = "block";
+                }
+
+
             } catch (error) {
                 console.error("Erreur lors de l'envoi du message :", error.message);
                 document.getElementById("chat-box").innerHTML += `<p>Bot: Erreur lors de l'envoi du message</p>`;
@@ -85,6 +95,35 @@
                 })
                 .then(data => {
                     console.log(data);
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                });
+        }
+
+        function exportReferences() {
+            fetch('/ExportReferences')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de l\'exportation des références');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    // Créer un URL objet pour le blob
+                    var url = window.URL.createObjectURL(blob);
+
+                    // Créer un élément d'ancre pour le téléchargement
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'references.xlsx'; // Nom du fichier à télécharger
+                    document.body.appendChild(a);
+
+                    // Clic automatique sur le lien pour déclencher le téléchargement
+                    a.click();
+
+                    // Nettoyer après le téléchargement
+                    window.URL.revokeObjectURL(url);
                 })
                 .catch(error => {
                     console.error('Erreur:', error);
