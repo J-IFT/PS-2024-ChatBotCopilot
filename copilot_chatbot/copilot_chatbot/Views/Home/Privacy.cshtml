@@ -73,7 +73,13 @@
         function uploadFile() {
             var fileInput = document.getElementById("file-input");
             var file = fileInput.files[0];
+            if (!file) {
+                console.error("Aucun fichier sélectionné.");
+                return;
+            }
             console.log("Nom du fichier :", file.name);
+            var fileNameElement = document.getElementById("file-name"); // Sélection du span pour afficher le nom du fichier
+            fileNameElement.textContent = file.name + " importé !"; // Affichage du nom du fichier avec "importé !"
             var formData = new FormData();
             formData.append("file", file);
 

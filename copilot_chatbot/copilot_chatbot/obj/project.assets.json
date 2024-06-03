@@ -7939,19 +7939,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Colas Rabiller\\.nuget\\packages\\": {}
+    "C:\\Users\\julie\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Colas Rabiller\\Desktop\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
+      "projectUniqueName": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
       "projectName": "copilot_chatbot",
-      "projectPath": "C:\\Users\\Colas Rabiller\\Desktop\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
-      "packagesPath": "C:\\Users\\Colas Rabiller\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Colas Rabiller\\Desktop\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\obj\\",
+      "projectPath": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
+      "packagesPath": "C:\\Users\\julie\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Colas Rabiller\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\julie\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -8040,6 +8040,24 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[6.0.31, 6.0.31]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[6.0.31, 6.0.31]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[6.0.31, 6.0.31]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[6.0.31, 6.0.31]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -8048,7 +8066,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.206\\RuntimeIdentifierGraph.json"
       }
     }
   }
