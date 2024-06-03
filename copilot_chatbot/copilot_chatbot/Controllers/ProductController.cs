@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using copilot_chatbot.Models;
 using System.Diagnostics;
 
+using Microsoft.EntityFrameworkCore;
 
 public class ProductController : Controller
 {
@@ -50,6 +51,40 @@ public class ProductController : Controller
             else if (_openAIService.ContainsKeyword(userMessage, "importé"))
             {
                 return Ok(new { message = "J’ai lancé l’import, revenez dans quelques minutes quand ce sera terminé" });
+            }
+            //Question 3 pptx : Fais moi un export des références produit
+            else if (_openAIService.ContainsKeyword(userMessage, "export"))
+            {
+                return Ok(new { message = "Bien sûr, voici un export des données" });
+            }
+            //Question 4 pptx : Combien y a-t-il de références produit dans la base ?
+            if (_openAIService.ContainsKeyword(userMessage, "références"))
+            {
+                var numberOfReferences = await _context.Products.CountAsync();
+                return Ok(new { message = $"Il y a actuellement {numberOfReferences} références produits dans la base" });
+            }
+            //Question 5 pptx : Combien d’imports ai-je déjà fait ?
+            else if (_openAIService.ContainsKeyword(userMessage, "imports"))
+            {
+                var userId = 1; // Remplacez ceci par l'ID de l'utilisateur actuel
+                var numberOfImports = await _context.Imports.Where(i => i.UserId == userId).CountAsync();
+                var numberOfReferences = await _context.Products.CountAsync();
+                //var totalReferences = await _context.Imports.Where(i => i.UserId == userId).SumAsync(i => i.Product.Count);
+                return Ok(new { message = $"Vous avez déjà lancé {numberOfImports} imports pour un total de {numberOfReferences} références produits." });
+            }
+            //Question 6 pptx : Est-ce que mon dernier import est terminé ?
+            else if (_openAIService.ContainsKeyword(userMessage, "terminé"))
+            {
+                var userId = 1; // Remplacez ceci par l'ID de l'utilisateur actuel
+                var lastImport = await _context.Imports.Where(i => i.UserId == userId).OrderByDescending(i => i.Imported_at).FirstOrDefaultAsync();
+                if (lastImport != null && !lastImport.IsProcessed)
+                {
+                    return Ok(new { message = "Non, la génération est toujours en cours, veuillez revenir dans quelques minutes." });
+                }
+                else
+                {
+                    return Ok(new { message = "Oui, la génération est terminée." });
+                }
             }
             else
             {
@@ -321,6 +356,63 @@ public class ProductController : Controller
         var message = "L'importation du fichier Excel est terminée et les données ont été traitées avec succès.";
         await _openAIService.GenerateContentAsync(message);
         Console.WriteLine("Notification d'importation terminée envoyée");
+    }
+
+    [HttpPost("ExportReferences")]
+    [HttpGet("ExportReferences")]
+    public async Task<IActionResult> ExportReferences()
+    {
+        try
+        {
+            Console.WriteLine("ExportReferences method called.");
+            // Étape 2 : Récupérer toutes les références produits depuis la base de données
+            var references = _context.Products.ToList(); // À adapter selon votre modèle de données
+            Console.WriteLine($"Total products: {references.Count}"); // Ajout d'un message de débogage
+            // Étape 3 : Parser les données JSON en Excel
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("References");
+                var currentRow = 1;
+
+                // Ajouter des en-têtes de colonne
+                worksheet.Cell(currentRow, 1).Value = "Blooming_season";
+                worksheet.Cell(currentRow, 2).Value = "Color";
+                worksheet.Cell(currentRow, 3).Value = "Exposition";
+                worksheet.Cell(currentRow, 4).Value = "Last_updated";
+                worksheet.Cell(currentRow, 5).Value = "Name";
+                worksheet.Cell(currentRow, 6).Value = "Size";
+                worksheet.Cell(currentRow, 7).Value = "Species";
+                worksheet.Cell(currentRow, 8).Value = "Type";
+                Console.WriteLine("En têtes done");
+                // Ajouter les données des références
+                foreach (var reference in references)
+                {
+                    currentRow++;
+                    worksheet.Cell(currentRow, 1).Value = reference.Blooming_season;
+                    worksheet.Cell(currentRow, 2).Value = reference.Color;
+                    worksheet.Cell(currentRow, 3).Value = reference.Exposition;
+                    worksheet.Cell(currentRow, 4).Value = reference.Last_updated;
+                    worksheet.Cell(currentRow, 5).Value = reference.Name;
+                    worksheet.Cell(currentRow, 6).Value = reference.Size;
+                    worksheet.Cell(currentRow, 7).Value = reference.Species;
+                    worksheet.Cell(currentRow, 8).Value = reference.Type;
+                }
+                Console.WriteLine("Refs done");
+                // Sauvegarder le fichier Excel dans un MemoryStream
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+
+                    // Retournez le fichier Excel au client
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "references.xlsx");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Une erreur s'est produite lors de l'export des références : {ex.Message}");
+        }
     }
 
 

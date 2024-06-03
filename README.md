@@ -22,20 +22,30 @@ L’utilisateur devra aussi être capable de savoir si des imports en son nom so
 
 ### 🐱 Notre projet :
 
-écrire notre projet (plantes par exemple) ici
+Notre projet consiste à créer un chatbot pour un site e-commerce spécialisé dans la vente de plantes. Le chatbot sera capable de générer des fiches produits à partir de caractéristiques fournies par les équipes marketing, et de répondre aux questions des utilisateurs.
 
 
 ### 🖲️ Commandes :
 
-écrire la doc technique ici
+Clonez le référentiel Git sur votre machine locale.
+https://github.com/J-IFT/PS-2024-ChatBotCopilot/tree/main
 
+Ouvrez le fichier solution (.sln) dans Visual Studio.
+Assurez-vous que les packages NuGet sont restaurés.
+
+Appuyez sur run pour exécuter l'application
+OU
+dotnet build
+dotnet run
 
 
 ### 💻 Applications et langages utilisés :
 
 + Visual Studio Code
 + C#
-
++ ASP.NET MVC
++ Entity Framework
++ OpenAI API
 
 
 ## 🌸 Merci !

@@ -103,9 +103,7 @@ C:\Users\julie\OneDrive - Ifag Paris\Documents\Architecture applicatives\PS-2024
 C:\Users\julie\OneDrive - Ifag Paris\Documents\Architecture applicatives\PS-2024-ChatBotCopilot\copilot_chatbot\copilot_chatbot\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.copilot_chatbot.props
 C:\Users\julie\OneDrive - Ifag Paris\Documents\Architecture applicatives\PS-2024-ChatBotCopilot\copilot_chatbot\copilot_chatbot\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.copilot_chatbot.props
 C:\Users\julie\OneDrive - Ifag Paris\Documents\Architecture applicatives\PS-2024-ChatBotCopilot\copilot_chatbot\copilot_chatbot\obj\Debug\net6.0\staticwebassets.pack.json
-C:\Users\julie\OneDrive - Ifag Paris\Documents\Architecture applicatives\PS-2024-ChatBotCopilot\copilot_chatbot\copilot_chatbot\obj\Debug\net6.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\julie\OneDrive - Ifag Paris\Documents\Architecture applicatives\PS-2024-ChatBotCopilot\copilot_chatbot\copilot_chatbot\obj\Debug\net6.0\scopedcss\bundle\copilot_chatbot.styles.css
-C:\Users\julie\OneDrive - Ifag Paris\Documents\Architecture applicatives\PS-2024-ChatBotCopilot\copilot_chatbot\copilot_chatbot\obj\Debug\net6.0\scopedcss\projectbundle\copilot_chatbot.bundle.scp.css
 C:\Users\julie\OneDrive - Ifag Paris\Documents\Architecture applicatives\PS-2024-ChatBotCopilot\copilot_chatbot\copilot_chatbot\obj\Debug\net6.0\copilot_.40215930.Up2Date
 C:\Users\julie\OneDrive - Ifag Paris\Documents\Architecture applicatives\PS-2024-ChatBotCopilot\copilot_chatbot\copilot_chatbot\obj\Debug\net6.0\copilot_chatbot.dll
 C:\Users\julie\OneDrive - Ifag Paris\Documents\Architecture applicatives\PS-2024-ChatBotCopilot\copilot_chatbot\copilot_chatbot\obj\Debug\net6.0\refint\copilot_chatbot.dll
