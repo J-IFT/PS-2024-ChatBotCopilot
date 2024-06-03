@@ -19,6 +19,7 @@
         <div id="file-upload" style="display:none;">
             <input type="file" id="file-input">
             <button onclick="uploadFile()">Importer</button>
+            <span id="file-name"></span>
         </div>
 
 @section Scripts {
@@ -62,7 +63,13 @@
         function uploadFile() {
             var fileInput = document.getElementById("file-input");
             var file = fileInput.files[0];
+            var fileNameElement = document.getElementById("file-name");
+            if (!file) {
+                console.error("Aucun fichier sélectionné.");
+                return;
+            }
             console.log("Nom du fichier :", file.name);
+            fileNameElement.textContent = file.name + " importé !";
             var formData = new FormData();
             formData.append("file", file);
 

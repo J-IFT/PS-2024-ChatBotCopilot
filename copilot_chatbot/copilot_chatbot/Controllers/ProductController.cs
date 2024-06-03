@@ -48,6 +48,11 @@ public class ProductController : Controller
             {
                 return Ok(new { message = "J’ai lancé l’import, revenez dans quelques minutes quand ce sera terminé" });
             }
+            //Question 3 pptx : Fais moi un export des références produit
+            else if (_openAIService.ContainsKeyword(userMessage, "export"))
+            {
+                return Ok(new { message = "Bien sûr, voici un export des données" });
+            }
             else
             {
                 var assistantMessage = response.choices?.FirstOrDefault()?.message?.content;
