@@ -74,21 +74,49 @@ public class ProductController : Controller
 // File d'attente pour stocker les fichiers en attente de traitement
 private readonly Queue<IFormFile> _fileQueue = new Queue<IFormFile>();
 private readonly object _lock = new object(); // Verrou pour synchroniser l'accès à la file d'attente
+private bool _isProcessing = false; // Indicateur pour savoir si le traitement est en cours
+
 
 // Action pour soumettre un fichier à la file d'attente
-public async Task AddFileToQueue(IFormFile file)
+[HttpPost("AddFileToQueue")]
+public async Task<IActionResult> AddFileToQueue(IFormFile file)
 {
-    lock (_lock)
+    try
     {
-        _fileQueue.Enqueue(file);
+        if (file == null || file.Length == 0)
+        {
+            return BadRequest("Aucun fichier sélectionné.");
+        }
+
+        if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+        {
+            return BadRequest("Veuillez sélectionner un fichier Excel (.xlsx).");
+        }
+
+        lock (_lock)
+        {
+            _fileQueue.Enqueue(file);
+            Console.WriteLine($"Fichier ajouté à la file d'attente : {file.FileName}");
+            if (!_isProcessing)
+            {
+                _isProcessing = true;
+                Task.Run(() => ProcessFileQueue());
+            }
+        }
+
+        return Ok("Fichier ajouté à la file d'attente.");
     }
-        Console.WriteLine($"Fichier ajouté à la file d'attente : {file.FileName}");
-    await HandleFileQueue();
+    catch (Exception ex)
+    {
+        return StatusCode(StatusCodes.Status500InternalServerError, $"Une erreur s'est produite lors de l'ajout du fichier à la file d'attente : {ex.Message}");
+    }
 }
 
 // Méthode pour traiter les fichiers dans la file d'attente
-public async Task HandleFileQueue()
+public async Task ProcessFileQueue()
 {
+            Console.WriteLine("Dans ProcessFileQueue.");
+
     while (true)
     {
         IFormFile file;
@@ -97,19 +125,19 @@ public async Task HandleFileQueue()
             if (_fileQueue.Count == 0)
             {
                 Console.WriteLine("File d'attente vide.");
+                _isProcessing = false;
                 break; // Sortir de la boucle si la file d'attente est vide
             }
             file = _fileQueue.Dequeue(); // Obtenir le prochain fichier de la file d'attente
         }
+
         Console.WriteLine($"Traitement du fichier de la file d'attente : {file.FileName}");
         // Traiter le fichier
         await UploadFile(file);
     }
 }
-
-
     [HttpPost("UploadFile")]
-    public async Task<IActionResult> UploadFile(IFormFile file)
+    public async Task<IActionResult> UploadFile(IFormFile file, User user)
     {
         try
         {
@@ -122,7 +150,6 @@ public async Task HandleFileQueue()
             {
                 return BadRequest("Veuillez sélectionner un fichier Excel (.xlsx).");
             }
-            Console.WriteLine($"dans uploadfile");
 
             using (var workbook = new XLWorkbook(file.OpenReadStream()))
             {
@@ -146,6 +173,8 @@ public async Task HandleFileQueue()
                 // Insert the imported data into the database
                 foreach (var row in data)
                 {
+                                Console.WriteLine($"dans uploadfile");
+
                     var product = new copilot_chatbot.Models.Product
                     {   
                         Blooming_season = row.ContainsKey("A") ? row["A"].ToString() : null,
@@ -155,8 +184,8 @@ public async Task HandleFileQueue()
                         Size = row.ContainsKey("D") ? row["D"].ToString() : null,
                         Name = row["E"].ToString(),
                         Species = row["F"].ToString(),
-                        Type = row.ContainsKey("G") ? row["G"].ToString() : null,
-                        
+                        Type = row.ContainsKey("G") ? row["G"].ToString() : null
+                    
                     };
                     _context.Products.Add(product);
 
@@ -164,10 +193,11 @@ public async Task HandleFileQueue()
                     {
                         IsProcessed = false,
                         Imported_at = DateTime.Now,
-                        UserId = 1, // en dur, à passer en dynamique
+                        UserId = 1,
                         Product = product
                     };
                     _context.Imports.Add(importRecord);
+            Console.WriteLine(product);
 
                
                 // Appel de la fonction de génération des données pour ce produit
@@ -188,21 +218,28 @@ public async Task HandleFileQueue()
         }
     }
 
-
 private async Task<GeneratedDataProduct> GenerateData(copilot_chatbot.Models.Product product, Import importRecord)
 {
+    Console.WriteLine($"Début de la génération de données pour le produit : {product.Name}");
+
     // Générer le titre
+    Console.WriteLine($"Génération du titre pour le produit : {product.Name}");
     var titleResponse = await _openAIService.GenerateContentAsync($"Générer un titre pour le produit {product.Name}. Caractéristiques : Blooming_season: {product.Blooming_season}, Color: {product.Color}, Exposition: {product.Exposition}, Size: {product.Size}, Species: {product.Species}, Type: {product.Type}");
     var title = titleResponse.choices?.FirstOrDefault()?.message?.content ?? $"Titre généré pour {product.Name}";
+    Console.WriteLine($"Titre généré : {title}");
 
     // Générer la description
+    Console.WriteLine($"Génération de la description pour le produit : {product.Name}");
     var descriptionResponse = await _openAIService.GenerateContentAsync($"Générer une description pour le produit {product.Name}. Caractéristiques : Blooming_season: {product.Blooming_season}, Color: {product.Color}, Exposition: {product.Exposition}, Size: {product.Size}, Species: {product.Species}, Type: {product.Type}");
     var description = descriptionResponse.choices?.FirstOrDefault()?.message?.content ?? "Description générée";
+    Console.WriteLine($"Description générée : {description}");
 
     // Générer les mots-clés
+    Console.WriteLine($"Génération des mots-clés pour le produit : {product.Name}");
     var keywordsResponse = await _openAIService.GenerateContentAsync($"Générer 5 mots-clés pour le produit {product.Name}. Caractéristiques : Blooming_season: {product.Blooming_season}, Color: {product.Color}, Exposition: {product.Exposition}, Size: {product.Size}, Species: {product.Species}, Type: {product.Type}");
     var keywordsContent = keywordsResponse.choices?.FirstOrDefault()?.message?.content;
     var keywords = ExtractKeywords(keywordsContent);
+    Console.WriteLine($"Mots-clés générés : {string.Join(", ", keywords)}");
 
     // Créez un objet GeneratedDataProduct avec les données générées
     var generatedData = new GeneratedDataProduct
@@ -216,43 +253,51 @@ private async Task<GeneratedDataProduct> GenerateData(copilot_chatbot.Models.Pro
     _context.GeneratedDataProducts.Add(generatedData);
     await _context.SaveChangesAsync();
 
-     // Mise à jour de IsProcessed à true après sauvegarde des données générées
-        importRecord.IsProcessed = true;
-        _context.Imports.Update(importRecord);
-        await _context.SaveChangesAsync();
+    // Mise à jour de IsProcessed à true après sauvegarde des données générées
+    importRecord.IsProcessed = true;
+    _context.Imports.Update(importRecord);
+    await _context.SaveChangesAsync();
 
+    Console.WriteLine($"Données générées et enregistrées pour le produit : {product.Name}");
     return generatedData;
-
 }
 
 private List<ProductKeyword> ExtractKeywords(string keywordsContent)
 {
+    Console.WriteLine($"Extraction des mots-clés à partir du contenu : {keywordsContent}");
     // Supposons que les mots-clés sont séparés par des virgules dans la réponse
     var keywords = keywordsContent.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                                  .Select(k => k.Trim())
-                                  .Distinct()
-                                  .ToList();
+                                      .Select(k => k.Trim())
+                                      .Distinct()
+                                      .ToList();
 
     var productKeywords = new List<ProductKeyword>();
     foreach (var keyword in keywords)
     {
+        
+        Console.WriteLine($"Traitement du mot-clé : {keyword}");
         var existingKeyword = _context.Keywords.FirstOrDefault(k => k.Name == keyword);
         if (existingKeyword == null)
         {
+            Console.WriteLine($"Création d'un nouveau mot-clé : {keyword}");
             existingKeyword = new Keyword { Name = keyword };
             _context.Keywords.Add(existingKeyword);
         }
         productKeywords.Add(new ProductKeyword { Keyword = existingKeyword });
     }
 
+    Console.WriteLine($"Mots-clés extraits et enregistrés : {string.Join(", ", keywords)}");
     return productKeywords;
 }
 
-   private async Task NotifyBotImportCompleted()
-    {
-        var message = "L'importation du fichier Excel est terminée et les données ont été traitées avec succès.";
-        await _openAIService.GenerateContentAsync(message);
-    }
+private async Task NotifyBotImportCompleted()
+{
+    Console.WriteLine("Début de la notification d'importation terminée");
+    var message = "L'importation du fichier Excel est terminée et les données ont été traitées avec succès.";
+    await _openAIService.GenerateContentAsync(message);
+    Console.WriteLine("Notification d'importation terminée envoyée");
+}
+
 
        public class ChatRequest
     {

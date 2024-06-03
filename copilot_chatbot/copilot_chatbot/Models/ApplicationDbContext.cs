@@ -2,6 +2,7 @@
 using System.IO;
 using copilot_chatbot.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 
 public class ApplicationDbContext : DbContext
 {

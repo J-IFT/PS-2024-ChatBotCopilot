@@ -12,6 +12,9 @@ namespace copilot_chatbot.Models
         public int? ExportId { get; set; }
         public virtual Export Export { get; set; }
 
+        public int? ProductId { get; set; }
+        public virtual Product Product { get; set; }
+
         public virtual ICollection<ProductKeyword> ProductKeywords { get; set; }
     }
 }
