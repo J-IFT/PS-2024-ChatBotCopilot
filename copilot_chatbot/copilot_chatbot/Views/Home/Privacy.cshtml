@@ -1,6 +1,96 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="text-center">
+    <h1 class="display-4">Bienvenue sur TerraBloom !</h1>
+</div>
+
+    <div id="chat-window">
+        <!-- Zone de chat -->
+    </div>
+
+    <h2>Discutez avec notre bot ! :)</h2>
+        <div id="chat-box"></div>
+        <input type="text" id="user-input" placeholder="Ecrire un message...">
+        <button class="send-btn" onclick="sendMessage()">Envoyer</button>
+
+        <!-- Bouton d'import -->
+        <div id="file-upload" style="display:none;">
+            <input type="file" id="file-input">
+            <button class="button" onclick="uploadFile()">Importer</button>
+        </div>
+
+@section Scripts {
+    <script>
+        async function sendMessage() {
+            var userInput = document.getElementById("user-input").value;
+            document.getElementById("chat-box").innerHTML += `<p>User: ${userInput}</p>`;
+
+            try {
+                var response = await fetch('/Product/ChatWithBot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: userInput })
+                });
+
+                if (!response.ok) {
+                    var errorData = await response.json();
+                    throw new Error(errorData);
+                }
+
+                var responseData = await response.json();
+                var botResponse = responseData.message;
+                document.getElementById("chat-box").innerHTML += `<p>Bot: ${botResponse}</p>`;
+
+                // Effacer le champ de texte après l'envoi du message
+                document.getElementById("user-input").value = '';
+
+                // Afficher le bouton d'import si le message est "générer"
+                if (/\b(générer)\b/i.test(userInput)) {
+                    document.getElementById("file-upload").style.display = "block";
+                }
+
+            } catch (error) {
+                console.error("Erreur lors de l'envoi du message :", error.message);
+                document.getElementById("chat-box").innerHTML += `<p>Bot: Erreur lors de l'envoi du message</p>`;
+            }
+        }
+
+        function uploadFile() {
+            var fileInput = document.getElementById("file-input");
+            var file = fileInput.files[0];
+            console.log("Nom du fichier :", file.name);
+            var formData = new FormData();
+            formData.append("file", file);
+
+            fetch('/AddFileToQueue', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de l\'importation du fichier');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                });
+        }
+
+        // Envoyer le message lorsque la touche Entrée est pressée
+        document.getElementById("user-input").addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+    </script>
+}
