@@ -72,7 +72,11 @@ namespace copilot_chatbot.Services
         {
             return message.Contains(keyword, StringComparison.OrdinalIgnoreCase);
         }
+        
     }
+
+       
+
     public class ResponseModel
     {
         public List<Choice> choices { get; set; }
@@ -144,4 +148,8 @@ namespace copilot_chatbot.Services
         public int prompt_tokens { get; set; }
         public int total_tokens { get; set; }
     }
+
+  
 }
+
+
