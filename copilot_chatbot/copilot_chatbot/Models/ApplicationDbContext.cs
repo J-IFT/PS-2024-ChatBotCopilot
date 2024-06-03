@@ -2,6 +2,7 @@
 using System.IO;
 using copilot_chatbot.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 
 public class ApplicationDbContext : DbContext
 {
@@ -93,7 +94,5 @@ public class ApplicationDbContext : DbContext
             .WithOne(i => i.User)
             .HasForeignKey(i => i.UserId)
             .OnDelete(DeleteBehavior.Cascade);
-
     }
-
 }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace copilot_chatbot.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class UpdateNullableFieldsInGeneratedDataProduct : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -116,7 +116,8 @@ namespace copilot_chatbot.Migrations
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     Created_at = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    ExportId = table.Column<int>(type: "INTEGER", nullable: false)
+                    ExportId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ProductId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -127,6 +128,11 @@ namespace copilot_chatbot.Migrations
                         principalTable: "Exports",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GeneratedDataProducts_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -166,6 +172,11 @@ namespace copilot_chatbot.Migrations
                 column: "ExportId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_GeneratedDataProducts_ProductId",
+                table: "GeneratedDataProducts",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Imports_ProductId",
                 table: "Imports",
                 column: "ProductId");
@@ -196,9 +207,6 @@ namespace copilot_chatbot.Migrations
                 name: "ProductKeywords");
 
             migrationBuilder.DropTable(
-                name: "Products");
-
-            migrationBuilder.DropTable(
                 name: "GeneratedDataProducts");
 
             migrationBuilder.DropTable(
@@ -206,6 +214,9 @@ namespace copilot_chatbot.Migrations
 
             migrationBuilder.DropTable(
                 name: "Exports");
+
+            migrationBuilder.DropTable(
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Users");

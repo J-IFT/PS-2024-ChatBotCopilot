@@ -6,23 +6,21 @@
     <h1 class="display-4">Bienvenue sur TerraBloom !</h1>
 </div>
 
-<div id="chat-window">
-    <!-- Zone de chat -->
-</div>
-
-<h2>Discutez avec notre bot ! :)</h2>
-
-<div>
-    <div id="chat-box" style="height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;"></div>
-    <input type="text" id="user-input" placeholder="Ecrire un message...">
-    <button onclick="sendMessage()">Envoyer</button>
-
-    <!-- Bouton d'import -->
-    <div id="file-upload" style="display:none;">
-        <input type="file" id="file-input">
-        <button onclick="uploadFile()">Importer</button>
+    <div id="chat-window">
+        <!-- Zone de chat -->
     </div>
-</div>
+
+    <h2>Discutez avec notre bot ! :)</h2>
+        <div id="chat-box"></div>
+        <input type="text" id="user-input" placeholder="Ecrire un message...">
+        <button class="btn-primary" onclick="sendMessage()">Envoyer</button>
+
+        <!-- Bouton d'import -->
+        <div id="file-upload" style="display:none;">
+            <input type="file" id="file-input">
+            <button onclick="uploadFile()">Importer</button>
+            <span id="file-name"></span>
+        </div>
 
 @section Scripts {
     <script>
@@ -65,7 +63,13 @@
         function uploadFile() {
             var fileInput = document.getElementById("file-input");
             var file = fileInput.files[0];
+            var fileNameElement = document.getElementById("file-name");
+            if (!file) {
+                console.error("Aucun fichier sélectionné.");
+                return;
+            }
             console.log("Nom du fichier :", file.name);
+            fileNameElement.textContent = file.name + " importé !";
             var formData = new FormData();
             formData.append("file", file);
 

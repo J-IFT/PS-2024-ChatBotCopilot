@@ -48,6 +48,11 @@ public class ProductController : Controller
             {
                 return Ok(new { message = "J’ai lancé l’import, revenez dans quelques minutes quand ce sera terminé" });
             }
+            //Question 3 pptx : Fais moi un export des références produit
+            else if (_openAIService.ContainsKeyword(userMessage, "export"))
+            {
+                return Ok(new { message = "Bien sûr, voici un export des données" });
+            }
             else
             {
                 var assistantMessage = response.choices?.FirstOrDefault()?.message?.content;
@@ -108,16 +113,19 @@ public class ProductController : Controller
                 // Insert the imported data into the database
                 foreach (var row in data)
                 {
+                                Console.WriteLine($"dans uploadfile");
+
                     var product = new copilot_chatbot.Models.Product
                     {
-                        Name = row["A"].ToString(),
-                        Species = row["B"].ToString(),
-                        Type = row.ContainsKey("C") ? row["C"].ToString() : null,
+                        Blooming_season = row.ContainsKey("A") ? row["A"].ToString() : null,
+                        Color = row.ContainsKey("B") ? row["B"].ToString() : null,
+                        Exposition = row.ContainsKey("C") ? row["C"].ToString() : null,
+                        Last_updated = DateTime.Now,
                         Size = row.ContainsKey("D") ? row["D"].ToString() : null,
-                        Blooming_season = row.ContainsKey("E") ? row["E"].ToString() : null,
-                        Color = row.ContainsKey("F") ? row["F"].ToString() : null,
-                        Exposition = row.ContainsKey("G") ? row["G"].ToString() : null,
-                        Last_updated = DateTime.Now
+                        Name = row["E"].ToString(),
+                        Species = row["F"].ToString(),
+                        Type = row.ContainsKey("G") ? row["G"].ToString() : null
+
                     };
                     _context.Products.Add(product);
 					var user_id = HttpContext.Session.GetInt32("UserId") ?? default(int);
@@ -129,12 +137,17 @@ public class ProductController : Controller
                         Product = product
                     };
                     _context.Imports.Add(importRecord);
-                }
 
+                    // Appel de la fonction de génération des données pour ce produit
+                    await GenerateData(product, importRecord);
+                }
                 // Save changes after adding all products and import records
                 await _context.SaveChangesAsync();
 
-                return Ok("Fichier Excel importé avec succès.");
+                await NotifyBotImportCompleted();
+
+                // Return a message indicating successful import
+                return Ok(new { message = "Fichier Excel importé avec succès." });
             }
         }
         catch (Exception ex)
@@ -143,6 +156,81 @@ public class ProductController : Controller
         }
     }
 
+    private async Task<GeneratedDataProduct> GenerateData(copilot_chatbot.Models.Product product, Import importRecord)
+    {
+        Console.WriteLine($"Début de la génération de données pour le produit : {product.Name}");
+
+        // Générer le titre
+        var titleResponse = await _openAIService.GenerateContentAsync($"Générer un titre pour le produit {product.Name}. Caractéristiques : Blooming_season: {product.Blooming_season}, Color: {product.Color}, Exposition: {product.Exposition}, Size: {product.Size}, Species: {product.Species}, Type: {product.Type}");
+        var title = titleResponse.choices?.FirstOrDefault()?.message?.content ?? $"Titre généré pour {product.Name}";
+
+        // Générer la description
+        var descriptionResponse = await _openAIService.GenerateContentAsync($"Générer une description pour le produit {product.Name}. Caractéristiques : Blooming_season: {product.Blooming_season}, Color: {product.Color}, Exposition: {product.Exposition}, Size: {product.Size}, Species: {product.Species}, Type: {product.Type}");
+        var description = descriptionResponse.choices?.FirstOrDefault()?.message?.content ?? "Description générée";
+
+        // Générer les mots-clés
+        var keywordsResponse = await _openAIService.GenerateContentAsync($"Générer 5 mots-clés pour le produit {product.Name}. Caractéristiques : Blooming_season: {product.Blooming_season}, Color: {product.Color}, Exposition: {product.Exposition}, Size: {product.Size}, Species: {product.Species}, Type: {product.Type}");
+        var keywordsContent = keywordsResponse.choices?.FirstOrDefault()?.message?.content;
+        var keywords = ExtractKeywords(keywordsContent);
+
+        // Enregistrement des données générées dans la base de données
+        var generatedData = new GeneratedDataProduct
+        {
+            Title = title,
+            Description = description,
+            Created_at = DateTime.Now,
+            ProductKeywords = keywords,
+            //ProductId = à rendre dynamique
+            //ExportId = à rendre dynamique
+        };
+
+        _context.GeneratedDataProducts.Add(generatedData);
+        await _context.SaveChangesAsync();
+
+        // Mise à jour de IsProcessed à true après sauvegarde des données générées
+        importRecord.IsProcessed = true;
+        _context.Imports.Update(importRecord);
+        await _context.SaveChangesAsync();
+
+        Console.WriteLine($"Données générées et enregistrées pour le produit : {product.Name}");
+        return generatedData;
+    }
+
+    private List<ProductKeyword> ExtractKeywords(string keywordsContent)
+    {
+        Console.WriteLine($"Extraction des mots-clés à partir du contenu : {keywordsContent}");
+        // Supposons que les mots-clés sont séparés par des virgules dans la réponse
+        var keywords = keywordsContent.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                          .Select(k => k.Trim())
+                                          .Distinct()
+                                          .ToList();
+
+        var productKeywords = new List<ProductKeyword>();
+        foreach (var keyword in keywords)
+        {
+
+            Console.WriteLine($"Traitement du mot-clé : {keyword}");
+            var existingKeyword = _context.Keywords.FirstOrDefault(k => k.Name == keyword);
+            if (existingKeyword == null)
+            {
+                Console.WriteLine($"Création d'un nouveau mot-clé : {keyword}");
+                existingKeyword = new Keyword { Name = keyword };
+                _context.Keywords.Add(existingKeyword);
+            }
+            productKeywords.Add(new ProductKeyword { Keyword = existingKeyword });
+        }
+
+        Console.WriteLine($"Mots-clés extraits et enregistrés : {string.Join(", ", keywords)}");
+        return productKeywords;
+    }
+
+    private async Task NotifyBotImportCompleted()
+    {
+        Console.WriteLine("Début de la notification d'importation terminée");
+        var message = "L'importation du fichier Excel est terminée et les données ont été traitées avec succès.";
+        await _openAIService.GenerateContentAsync(message);
+        Console.WriteLine("Notification d'importation terminée envoyée");
+    }
     public class ChatRequest
     {
         public string Message { get; set; }
