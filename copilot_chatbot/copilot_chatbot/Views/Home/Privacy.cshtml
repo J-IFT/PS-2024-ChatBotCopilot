@@ -13,13 +13,12 @@
     <h2>Discutez avec notre bot ! :)</h2>
         <div id="chat-box"></div>
         <input type="text" id="user-input" placeholder="Ecrire un message...">
-        <button class="btn-primary" onclick="sendMessage()">Envoyer</button>
+        <button class="send-btn" onclick="sendMessage()">Envoyer</button>
 
         <!-- Bouton d'import -->
         <div id="file-upload" style="display:none;">
             <input type="file" id="file-input">
-            <button onclick="uploadFile()">Importer</button>
-            <span id="file-name"></span>
+            <button class="button" onclick="uploadFile()">Importer</button>
         </div>
 
 @section Scripts {
@@ -63,17 +62,11 @@
         function uploadFile() {
             var fileInput = document.getElementById("file-input");
             var file = fileInput.files[0];
-            var fileNameElement = document.getElementById("file-name");
-            if (!file) {
-                console.error("Aucun fichier sélectionné.");
-                return;
-            }
             console.log("Nom du fichier :", file.name);
-            fileNameElement.textContent = file.name + " importé !";
             var formData = new FormData();
             formData.append("file", file);
 
-            fetch('/UploadFile', {
+            fetch('/AddFileToQueue', {
                 method: 'POST',
                 body: formData
             })

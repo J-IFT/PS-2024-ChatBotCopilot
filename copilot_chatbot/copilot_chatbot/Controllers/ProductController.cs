@@ -1,4 +1,5 @@
-﻿using copilot_chatbot.Services;
+﻿
+using copilot_chatbot.Services;
 using copilot_chatbot.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +10,8 @@ using System.IO;
 using ClosedXML.Excel;
 using Newtonsoft.Json;
 using copilot_chatbot.Models;
+using System.Diagnostics;
+
 
 public class ProductController : Controller
 {
@@ -48,11 +51,6 @@ public class ProductController : Controller
             {
                 return Ok(new { message = "J’ai lancé l’import, revenez dans quelques minutes quand ce sera terminé" });
             }
-            //Question 3 pptx : Fais moi un export des références produit
-            else if (_openAIService.ContainsKeyword(userMessage, "export"))
-            {
-                return Ok(new { message = "Bien sûr, voici un export des données" });
-            }
             else
             {
                 var assistantMessage = response.choices?.FirstOrDefault()?.message?.content;
@@ -76,8 +74,14 @@ public class ProductController : Controller
         return Ok();
     }
 
-    [HttpPost("UploadFile")]
-    public async Task<IActionResult> UploadFile(IFormFile file)
+    // File d'attente pour stocker les fichiers en attente de traitement
+    private readonly Queue<IFormFile> _fileQueue = new Queue<IFormFile>();
+    private readonly object _lock = new object(); // Verrou pour synchroniser l'accès à la file d'attente
+    private bool _isProcessing = false; // Indicateur pour savoir si le traitement est en cours
+
+
+    [HttpPost("AddFileToQueue")]
+    public async Task<IActionResult> AddFileToQueue(IFormFile file)
     {
         try
         {
@@ -91,67 +95,152 @@ public class ProductController : Controller
                 return BadRequest("Veuillez sélectionner un fichier Excel (.xlsx).");
             }
 
-            using (var workbook = new XLWorkbook(file.OpenReadStream()))
+            // Créer un fichier temporaire
+            string tempFileName = Path.GetTempFileName();
+            using (var fileStream = new FileStream(tempFileName, FileMode.Create))
             {
-                var worksheet = workbook.Worksheet(1);
-                var rows = worksheet.RowsUsed().Skip(1).ToList(); // Skip header row
-                var data = new List<Dictionary<string, object>>();
-
-                foreach (var row in rows)
-                {
-                    var rowData = new Dictionary<string, object>();
-                    foreach (var cell in row.Cells())
-                    {
-                        rowData[cell.Address.ColumnLetter] = cell.Value;
-                    }
-                    data.Add(rowData);
-                }
-
-                var jsonData = JsonConvert.SerializeObject(data);
-                Console.WriteLine(jsonData);
-
-                // Insert the imported data into the database
-                foreach (var row in data)
-                {
-                                Console.WriteLine($"dans uploadfile");
-
-                    var product = new copilot_chatbot.Models.Product
-                    {   
-                        Blooming_season = row.ContainsKey("A") ? row["A"].ToString() : null,
-                        Color = row.ContainsKey("B") ? row["B"].ToString() : null,
-                        Exposition = row.ContainsKey("C") ? row["C"].ToString() : null,
-                        Last_updated = DateTime.Now,
-                        Size = row.ContainsKey("D") ? row["D"].ToString() : null,
-                        Name = row["E"].ToString(),
-                        Species = row["F"].ToString(),
-                        Type = row.ContainsKey("G") ? row["G"].ToString() : null
-                    
-                    };
-                    _context.Products.Add(product);
-
-                    var importRecord = new Import
-                    {
-                        IsProcessed = false,
-                        Imported_at = DateTime.Now,
-                        UserId = 1,//à modifier selon le user, à rendre dynamique
-                        Product = product
-                    };
-                    _context.Imports.Add(importRecord);
-
-                    // Appel de la fonction de génération des données pour ce produit
-                    await GenerateData(product, importRecord);
-                }
-                // Save changes after adding all products and import records
-                await _context.SaveChangesAsync();
-
-                await NotifyBotImportCompleted();
-
-                // Return a message indicating successful import
-                return Ok(new { message = "Fichier Excel importé avec succès." });
+                await file.CopyToAsync(fileStream);
             }
+
+            // Ajouter le fichier temporaire à la file d'attente
+            var tempFile = new FormFile(new FileStream(tempFileName, FileMode.Open), 0, file.Length, file.FileName, file.ContentType);
+            lock (_lock)
+            {
+                _fileQueue.Enqueue(tempFile);
+                Console.WriteLine($"Fichier ajouté à la file d'attente : {file.FileName}");
+                if (!_isProcessing)
+                {
+                    _isProcessing = true;
+                    Task.Run(() => ProcessFileQueue());
+                }
+            }
+
+            return Ok("Fichier ajouté à la file d'attente.");
         }
         catch (Exception ex)
         {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Une erreur s'est produite lors de l'ajout du fichier à la file d'attente : {ex.Message}");
+        }
+    }
+
+
+
+    public async Task ProcessFileQueue()
+    {
+        while (true)
+        {
+            IFormFile file;
+            lock (_lock)
+            {
+                if (_fileQueue.Count == 0)
+                {
+                    Console.WriteLine("File d'attente vide.");
+                    _isProcessing = false;
+                    break; // Sortir de la boucle si la file d'attente est vide
+                }
+                file = _fileQueue.Dequeue(); // Obtenir le prochain fichier de la file d'attente
+            }
+
+            Console.WriteLine($"Traitement du fichier de la file d'attente : {file.FileName}");
+            // Traiter le fichier
+            await UploadFile(file);
+
+            // Supprimer le fichier temporaire
+
+        }
+    }
+
+    [HttpPost("UploadFile")]
+    public async Task<IActionResult> UploadFile(IFormFile file)
+    {
+        try
+        {
+            Console.WriteLine("Début du téléchargement de fichier.");
+
+            if (file == null || file.Length == 0)
+            {
+                Console.WriteLine("Aucun fichier sélectionné.");
+                return BadRequest("Aucun fichier sélectionné.");
+            }
+
+            // Vérifier l'extension de fichier en utilisant le nom de fichier original
+            if (!Path.GetExtension(file.Name).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("Fichier non valide sélectionné.");
+                return BadRequest("Veuillez sélectionner un fichier Excel (.xlsx).");
+            }
+
+            // Lire le fichier temporaire
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
+
+                using (var workbook = new XLWorkbook(memoryStream))
+                {
+                    var worksheet = workbook.Worksheet(1);
+                    var rows = worksheet.RowsUsed().Skip(1).ToList(); // Skip header row
+                    var data = new List<Dictionary<string, object>>();
+
+                    foreach (var row in rows)
+                    {
+                        var rowData = new Dictionary<string, object>();
+                        foreach (var cell in row.Cells())
+                        {
+                            rowData[cell.Address.ColumnLetter] = cell.Value;
+                        }
+                        data.Add(rowData);
+                    }
+
+
+
+                    // Insert the imported data into the database
+                    foreach (var row in data)
+                    {
+                        Console.WriteLine($"Traitement du produit : {JsonConvert.SerializeObject(row)}");
+
+                        var product = new copilot_chatbot.Models.Product
+                        {
+                            Blooming_season = row.ContainsKey("A") ? row["A"].ToString() : null,
+                            Color = row.ContainsKey("B") ? row["B"].ToString() : null,
+                            Exposition = row.ContainsKey("C") ? row["C"].ToString() : null,
+                            Last_updated = DateTime.Now,
+                            Size = row.ContainsKey("D") ? row["D"].ToString() : null,
+                            Name = row["E"].ToString(),
+                            Species = row["F"].ToString(),
+                            Type = row.ContainsKey("G") ? row["G"].ToString() : null
+                        };
+                        _context.Products.Add(product);
+
+                        var importRecord = new Import
+                        {
+                            IsProcessed = false,
+                            Imported_at = DateTime.Now,
+                            UserId = 1,
+                            Product = product
+                        };
+                        _context.Imports.Add(importRecord);
+                        Console.WriteLine($"Produit ajouté : {product.Name}");
+
+                        // Appel de la fonction de génération des données pour ce produit
+                        await GenerateData(product, importRecord);
+                    }
+
+                    // Save changes after adding all products and import records
+                    await _context.SaveChangesAsync();
+                    Console.WriteLine("Changements sauvegardés après l'ajout des produits et des enregistrements d'importation.");
+
+                    await NotifyBotImportCompleted();
+
+                    return Ok("Fichier Excel importé avec succès.");
+                }
+            }
+
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Une erreur s'est produite lors de l'import du fichier : {ex.Message}");
             return StatusCode(StatusCodes.Status500InternalServerError, $"Une erreur s'est produite lors de l'import du fichier : {ex.Message}");
         }
     }
@@ -161,27 +250,31 @@ public class ProductController : Controller
         Console.WriteLine($"Début de la génération de données pour le produit : {product.Name}");
 
         // Générer le titre
+        Console.WriteLine($"Génération du titre pour le produit : {product.Name}");
         var titleResponse = await _openAIService.GenerateContentAsync($"Générer un titre pour le produit {product.Name}. Caractéristiques : Blooming_season: {product.Blooming_season}, Color: {product.Color}, Exposition: {product.Exposition}, Size: {product.Size}, Species: {product.Species}, Type: {product.Type}");
         var title = titleResponse.choices?.FirstOrDefault()?.message?.content ?? $"Titre généré pour {product.Name}";
+        Console.WriteLine($"Titre généré : {title}");
 
         // Générer la description
+        Console.WriteLine($"Génération de la description pour le produit : {product.Name}");
         var descriptionResponse = await _openAIService.GenerateContentAsync($"Générer une description pour le produit {product.Name}. Caractéristiques : Blooming_season: {product.Blooming_season}, Color: {product.Color}, Exposition: {product.Exposition}, Size: {product.Size}, Species: {product.Species}, Type: {product.Type}");
         var description = descriptionResponse.choices?.FirstOrDefault()?.message?.content ?? "Description générée";
+        Console.WriteLine($"Description générée : {description}");
 
         // Générer les mots-clés
+        Console.WriteLine($"Génération des mots-clés pour le produit : {product.Name}");
         var keywordsResponse = await _openAIService.GenerateContentAsync($"Générer 5 mots-clés pour le produit {product.Name}. Caractéristiques : Blooming_season: {product.Blooming_season}, Color: {product.Color}, Exposition: {product.Exposition}, Size: {product.Size}, Species: {product.Species}, Type: {product.Type}");
         var keywordsContent = keywordsResponse.choices?.FirstOrDefault()?.message?.content;
         var keywords = ExtractKeywords(keywordsContent);
+        Console.WriteLine($"Mots-clés générés : {string.Join(", ", keywords)}");
 
-        // Enregistrement des données générées dans la base de données
+        // Créez un objet GeneratedDataProduct avec les données générées
         var generatedData = new GeneratedDataProduct
         {
             Title = title,
             Description = description,
             Created_at = DateTime.Now,
-            ProductKeywords = keywords,
-            //ProductId = à rendre dynamique
-            //ExportId = à rendre dynamique
+            ProductKeywords = keywords
         };
 
         _context.GeneratedDataProducts.Add(generatedData);
@@ -195,7 +288,6 @@ public class ProductController : Controller
         Console.WriteLine($"Données générées et enregistrées pour le produit : {product.Name}");
         return generatedData;
     }
-
     private List<ProductKeyword> ExtractKeywords(string keywordsContent)
     {
         Console.WriteLine($"Extraction des mots-clés à partir du contenu : {keywordsContent}");
@@ -208,7 +300,6 @@ public class ProductController : Controller
         var productKeywords = new List<ProductKeyword>();
         foreach (var keyword in keywords)
         {
-        
             Console.WriteLine($"Traitement du mot-clé : {keyword}");
             var existingKeyword = _context.Keywords.FirstOrDefault(k => k.Name == keyword);
             if (existingKeyword == null)
@@ -231,8 +322,11 @@ public class ProductController : Controller
         await _openAIService.GenerateContentAsync(message);
         Console.WriteLine("Notification d'importation terminée envoyée");
     }
+
+
     public class ChatRequest
     {
         public string Message { get; set; }
     }
 }
+
