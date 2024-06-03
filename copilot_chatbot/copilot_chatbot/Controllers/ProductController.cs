@@ -233,6 +233,7 @@ public class ProductController : Controller
     }
 
     [HttpPost("ExportReferences")]
+    [HttpGet("ExportReferences")]
     public async Task<IActionResult> ExportReferences()
     {
         try
