@@ -120,12 +120,12 @@ public class ProductController : Controller
                         Last_updated = DateTime.Now
                     };
                     _context.Products.Add(product);
-
-                    var importRecord = new Import
+					var user_id = HttpContext.Session.GetInt32("UserId") ?? default(int);
+					var importRecord = new Import
                     {
                         IsProcessed = false,
                         Imported_at = DateTime.Now,
-                        UserId = 1, // en dur, à passer en dynamique
+                        UserId = user_id,
                         Product = product
                     };
                     _context.Imports.Add(importRecord);

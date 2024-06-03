@@ -15,7 +15,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<OpenAIService>();
 
 // Ajoute le support des sessions
-builder.Services.AddSession();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Durée de la session
+    options.Cookie.HttpOnly = true; // La session ne doit être accessible que via HTTP
+    options.Cookie.IsEssential = true; // Rendre le cookie essentiel
+});
 
 builder.Services.AddSingleton<OpenAIService>();
 builder.Services.AddSingleton<ExcelManager>();

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
+using Microsoft.AspNetCore.Http;
 
 namespace copilot_chatbot.Controllers
 {
@@ -47,6 +48,7 @@ namespace copilot_chatbot.Controllers
                     if (authenticationService.IsUserValid(username, email, password))
                     {
                         // Si le mot de passe est correct, redirigez l'utilisateur vers la page d'accueil
+						HttpContext.Session.SetInt32("UserId", user.Id);
                         return RedirectToAction("Privacy", "Home");
                     }
                     else
