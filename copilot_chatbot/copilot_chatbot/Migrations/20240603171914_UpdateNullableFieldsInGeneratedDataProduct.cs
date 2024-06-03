@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace copilot_chatbot.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class UpdateNullableFieldsInGeneratedDataProduct : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -116,8 +116,8 @@ namespace copilot_chatbot.Migrations
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     Created_at = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    ProductId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ExportId = table.Column<int>(type: "INTEGER", nullable: false)
+                    ExportId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ProductId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -132,8 +132,7 @@ namespace copilot_chatbot.Migrations
                         name: "FK_GeneratedDataProducts_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(

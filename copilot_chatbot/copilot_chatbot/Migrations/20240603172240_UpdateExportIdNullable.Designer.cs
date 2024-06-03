@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace copilot_chatbot.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240603134936_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240603172240_UpdateExportIdNullable")]
+    partial class UpdateExportIdNullable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -60,7 +60,7 @@ namespace copilot_chatbot.Migrations
                         .IsRequired()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int?>("ProductId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
@@ -226,9 +226,7 @@ namespace copilot_chatbot.Migrations
 
                     b.HasOne("copilot_chatbot.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductId");
 
                     b.Navigation("Export");
 

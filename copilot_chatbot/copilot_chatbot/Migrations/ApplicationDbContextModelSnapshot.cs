@@ -58,7 +58,7 @@ namespace copilot_chatbot.Migrations
                         .IsRequired()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int?>("ProductId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
@@ -224,9 +224,7 @@ namespace copilot_chatbot.Migrations
 
                     b.HasOne("copilot_chatbot.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductId");
 
                     b.Navigation("Export");
 
