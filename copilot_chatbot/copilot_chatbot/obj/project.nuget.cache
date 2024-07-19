@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "tKi7gb/kW5RYvHMhkCPQ4acvTw3v0j3q4lUIh8yPqwDjJ9o91rHX8fffukp8r7d6OVH5XxalqmjdjUnnTyWiBA==",
+  "dgSpecHash": "dvwgy3CLo5U=",
   "success": true,
-  "projectFilePath": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
+  "projectFilePath": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\2023-2024_I1\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\julie\\.nuget\\packages\\adaptivecards\\1.2.3\\adaptivecards.1.2.3.nupkg.sha512",
     "C:\\Users\\julie\\.nuget\\packages\\closedxml\\0.102.2\\closedxml.0.102.2.nupkg.sha512",

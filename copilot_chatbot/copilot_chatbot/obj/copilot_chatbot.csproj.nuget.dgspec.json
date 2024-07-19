@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj": {}
+    "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\2023-2024_I1\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj": {}
   },
   "projects": {
-    "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj": {
+    "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\2023-2024_I1\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
+        "projectUniqueName": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\2023-2024_I1\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
         "projectName": "copilot_chatbot",
-        "projectPath": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
+        "projectPath": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\2023-2024_I1\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\copilot_chatbot.csproj",
         "packagesPath": "C:\\Users\\julie\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\obj\\",
+        "outputPath": "C:\\Users\\julie\\OneDrive - Ifag Paris\\Documents\\2023-2024_I1\\Architecture applicatives\\PS-2024-ChatBotCopilot\\copilot_chatbot\\copilot_chatbot\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\julie\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -22,6 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -129,7 +130,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.206\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }
